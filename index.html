@@ -1,0 +1,6519 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#8f413b" />
+    <meta name="application-name" content="たつこをミマモルメ" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="たつこをミマモルメ" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png" />
+    <link rel="shortcut icon" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="./site.webmanifest" />
+    <title>たつこをミマモルメ</title>
+    <style>
+:root {
+  --bg: #f4ece6;
+  --bg-soft: #fff8f1;
+  --surface: rgba(255, 250, 245, 0.9);
+  --surface-strong: #fffdfb;
+  --line: rgba(139, 92, 72, 0.18);
+  --ink: #261816;
+  --ink-soft: #6f5751;
+  --accent: #96433d;
+  --accent-strong: #78312c;
+  --accent-soft: #edd2cb;
+  --accent-pale: #f8ece8;
+  --gold: #b6894b;
+  --shadow-strong: 0 24px 60px rgba(63, 33, 22, 0.16);
+  --shadow-soft: 0 12px 28px rgba(63, 33, 22, 0.1);
+  --radius-xl: 32px;
+  --radius-lg: 24px;
+  --radius-md: 18px;
+  --radius-sm: 14px;
+  --font-display: "BIZ UDPMincho", "Yu Mincho", "Hiragino Mincho ProN", serif;
+  --font-body: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  color-scheme: light;
+  background: linear-gradient(180deg, #f8f0e9 0%, #f1e5db 100%);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(182, 137, 75, 0.14), transparent 28%),
+    radial-gradient(circle at right 12% top 14%, rgba(150, 67, 61, 0.14), transparent 24%),
+    linear-gradient(180deg, #f8f0e9 0%, #efe2d8 100%);
+}
+
+body.auth-locked {
+  overflow: hidden;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.noscript-message {
+  margin: 24px auto;
+  width: min(92vw, 420px);
+  padding: 16px 18px;
+  border-radius: var(--radius-md);
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-soft);
+  text-align: center;
+}
+
+.app-backdrop {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.app-backdrop__glow {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(16px);
+  opacity: 0.7;
+}
+
+.app-backdrop__glow--left {
+  width: 220px;
+  height: 220px;
+  left: -48px;
+  top: 84px;
+  background: rgba(182, 137, 75, 0.16);
+}
+
+.app-backdrop__glow--right {
+  width: 240px;
+  height: 240px;
+  right: -72px;
+  top: 26%;
+  background: rgba(150, 67, 61, 0.12);
+}
+
+.auth-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+}
+
+.auth-gate__backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top, rgba(182, 137, 75, 0.18), transparent 24%),
+    linear-gradient(180deg, rgba(251, 242, 235, 0.96), rgba(239, 226, 216, 0.98));
+}
+
+.auth-card {
+  position: relative;
+  width: min(100%, 420px);
+  padding: 28px 22px 24px;
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  background:
+    linear-gradient(180deg, rgba(255, 252, 248, 0.94), rgba(248, 236, 227, 0.92));
+  box-shadow: 0 28px 70px rgba(46, 23, 16, 0.18);
+  text-align: center;
+}
+
+.auth-card__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  line-height: 1.55;
+}
+
+.auth-card__text {
+  margin: 14px 0 0;
+  color: var(--ink-soft);
+  line-height: 1.8;
+}
+
+.auth-display {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 20px 0 12px;
+}
+
+.auth-slot {
+  min-height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  border: 1px solid rgba(150, 67, 61, 0.16);
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--accent);
+  font-size: 1.4rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+.auth-slot--filled {
+  border-color: rgba(150, 67, 61, 0.28);
+  background: rgba(255, 248, 243, 0.94);
+}
+
+.auth-error {
+  margin: 0 0 12px;
+  color: #c14942;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.auth-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.auth-key {
+  min-height: 58px;
+  border-radius: 20px;
+  border: 1px solid rgba(150, 67, 61, 0.12);
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--ink);
+  font-size: 1.15rem;
+  font-weight: 700;
+  box-shadow: var(--shadow-soft);
+}
+
+.auth-key--sub {
+  font-size: 0.92rem;
+}
+
+.app-shell {
+  position: relative;
+  width: min(100%, 460px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: max(20px, env(safe-area-inset-top)) 18px
+    calc(106px + env(safe-area-inset-bottom));
+}
+
+.topbar {
+  margin-bottom: 12px;
+}
+
+.topbar-grid {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.brand-block {
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.brand-block--single {
+  width: 100%;
+}
+
+.topbar-meta {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.brand-title,
+.section-title,
+.calendar-month-title,
+.modal-title {
+  margin: 0;
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+}
+
+.brand-title {
+  max-width: 100%;
+  font-size: clamp(1.48rem, 5.4vw, 1.92rem);
+  line-height: 1.16;
+  white-space: nowrap;
+  text-wrap: nowrap;
+}
+
+.brand-subtitle,
+.support-text,
+.calendar-hint,
+.status-pill__label,
+.status-pill__value,
+.modal-meta,
+.modal-kicker {
+  color: var(--ink-soft);
+}
+
+.brand-subtitle {
+  margin: 10px auto 0;
+  max-width: 24rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.album-chip,
+.primary-button,
+.ghost-button,
+.toggle-button,
+.icon-button,
+.nav-button,
+.shortcut-card,
+.modal-close,
+.topic-card,
+.notice-card,
+.month-header {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    opacity 180ms ease,
+    filter 180ms ease;
+}
+
+.pressable {
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    opacity 180ms ease,
+    filter 180ms ease;
+}
+
+.pressable::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      circle at var(--press-x, 50%) var(--press-y, 50%),
+      rgba(255, 255, 255, 0.48),
+      rgba(255, 255, 255, 0.16) 32%,
+      transparent 66%
+    );
+  opacity: 0;
+  transform: scale(0.92);
+  transition:
+    opacity 170ms ease,
+    transform 220ms ease;
+  pointer-events: none;
+}
+
+.pressable:active,
+.pressable.is-held {
+  filter: brightness(0.985) saturate(1.04);
+  transform: translateY(2px) scale(0.972);
+}
+
+.pressable.is-tap-flash::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.calendar-cell.pressable::after {
+  display: none;
+}
+
+.album-chip,
+.primary-button,
+.icon-button,
+.nav-button,
+.ghost-button,
+.toggle-button {
+  min-height: 46px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.album-chip,
+.primary-button {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  color: #fffaf7;
+  box-shadow: 0 16px 26px rgba(120, 49, 44, 0.24);
+}
+
+.album-chip {
+  padding: 0 18px;
+  flex: 0 0 auto;
+}
+
+.status-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 10px 0 16px;
+}
+
+.status-pill {
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 252, 248, 0.76);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(14px);
+  text-align: center;
+}
+
+.status-pill--button {
+  width: 100%;
+  border: 1px solid rgba(150, 67, 61, 0.12);
+}
+
+.status-pill--album {
+  text-align: center;
+  background:
+    linear-gradient(180deg, rgba(255, 247, 236, 0.98), rgba(246, 236, 220, 0.94));
+  border-color: rgba(182, 137, 75, 0.2);
+}
+
+.status-pill--album .status-pill__value {
+  color: #8a5c19;
+}
+
+.status-pill--unread {
+  background:
+    linear-gradient(180deg, rgba(244, 248, 255, 0.96), rgba(233, 241, 253, 0.92));
+  border-color: rgba(83, 118, 171, 0.16);
+}
+
+.status-pill--alert {
+  background:
+    linear-gradient(180deg, rgba(255, 244, 242, 0.96), rgba(251, 229, 226, 0.9));
+  border-color: rgba(201, 73, 66, 0.22);
+  box-shadow:
+    0 14px 24px rgba(201, 73, 66, 0.16),
+    0 0 0 6px rgba(201, 73, 66, 0.06);
+}
+
+.status-pill__label {
+  display: block;
+  font-size: 0.76rem;
+  margin-bottom: 5px;
+}
+
+.status-pill__value {
+  display: block;
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.status-pill__value--alert {
+  color: #c14942;
+}
+
+.status-pill__hint {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink-soft);
+  font-size: 0.74rem;
+  line-height: 1.4;
+}
+
+.panel-host {
+  position: relative;
+}
+
+.panel {
+  animation: panel-enter 260ms ease;
+}
+
+.panel[hidden] {
+  display: none;
+}
+
+@keyframes panel-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-card,
+.pinned-card,
+.filter-card,
+.calendar-shell,
+.notice-month,
+.topic-card,
+.notice-card,
+.shortcut-card {
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 250, 245, 0.82));
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(16px);
+}
+
+.hero-card,
+.pinned-card,
+.filter-card,
+.calendar-shell,
+.notice-month {
+  border-radius: var(--radius-xl);
+  padding: 20px;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.section-head--stack {
+  display: grid;
+  gap: 8px;
+}
+
+.section-title {
+  font-size: 1.34rem;
+}
+
+.ghost-button,
+.toggle-button,
+.icon-button,
+.modal-close {
+  background: rgba(255, 249, 244, 0.8);
+  color: var(--accent-strong);
+  border-color: rgba(150, 67, 61, 0.16);
+}
+
+.ghost-button,
+.toggle-button,
+.icon-button {
+  padding: 0 16px;
+}
+
+.ghost-button--compact {
+  min-height: 40px;
+  padding: 0 14px;
+}
+
+.hero-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-card--topic {
+  background:
+    linear-gradient(180deg, rgba(255, 250, 244, 0.92), rgba(252, 242, 233, 0.88));
+  border-color: rgba(190, 149, 92, 0.18);
+}
+
+.hero-card::before,
+.pinned-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, rgba(182, 137, 75, 0.12), transparent 44%),
+    linear-gradient(335deg, rgba(150, 67, 61, 0.12), transparent 40%);
+  pointer-events: none;
+}
+
+.topic-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.topic-card,
+.shortcut-card,
+.notice-card {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  text-align: left;
+  border: 1px solid var(--line);
+}
+
+.topic-card {
+  background: linear-gradient(180deg, rgba(253, 246, 240, 0.92), rgba(248, 237, 231, 0.96));
+}
+
+.topic-card--today {
+  border-color: rgba(187, 106, 86, 0.18);
+  background:
+    linear-gradient(180deg, rgba(255, 246, 241, 0.96), rgba(250, 234, 226, 0.98));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62);
+}
+
+.topic-card--tomorrow {
+  border-color: rgba(109, 139, 156, 0.18);
+  background:
+    linear-gradient(180deg, rgba(245, 250, 252, 0.96), rgba(232, 241, 246, 0.98));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.64);
+}
+
+.topic-card__label,
+.shortcut-card__label {
+  display: block;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.topic-card--today .topic-card__label {
+  color: #b25f4b;
+}
+
+.topic-card--tomorrow .topic-card__label {
+  color: #57788a;
+}
+
+.topic-card--today .topic-card__summary {
+  color: rgba(94, 62, 54, 0.88);
+}
+
+.topic-card--tomorrow .topic-card__summary {
+  color: rgba(67, 87, 98, 0.88);
+}
+
+.topic-card__title {
+  margin: 12px 0 10px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.topic-card__summary,
+.shortcut-card__meta,
+.notice-card__snippet,
+.month-summary,
+.calendar-count,
+.empty-text {
+  margin: 0;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.topic-card__meta,
+.shortcut-card__value,
+.notice-card__meta,
+.notice-card__status,
+.calendar-event__time,
+.calendar-cell__count,
+.modal-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(150, 67, 61, 0.08);
+  color: var(--accent-strong);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.topic-card__footer {
+  margin-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pinned-card {
+  margin-top: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.pinned-card--saved {
+  background:
+    linear-gradient(180deg, rgba(246, 250, 245, 0.92), rgba(235, 244, 240, 0.88));
+  border-color: rgba(110, 141, 126, 0.18);
+}
+
+.pinned-empty-state {
+  min-height: 6px;
+}
+
+.pinned-notice-list {
+  display: grid;
+  gap: 12px;
+}
+
+.shortcut-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.shortcut-card {
+  background: linear-gradient(180deg, rgba(255, 252, 248, 0.96), rgba(249, 238, 230, 0.94));
+}
+
+.shortcut-card__value {
+  margin-top: 12px;
+  margin-bottom: 10px;
+}
+
+.home-notice-list {
+  display: grid;
+  gap: 12px;
+}
+
+.home-notice-list .notice-card {
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.primary-button {
+  width: 100%;
+  padding: 0 18px;
+  font-weight: 700;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.notice-board {
+  --notice-accent: #96433d;
+  --notice-accent-icon: rgba(150, 67, 61, 0.5);
+  --notice-accent-soft: rgba(237, 210, 203, 0.46);
+  --notice-accent-border: rgba(150, 67, 61, 0.14);
+  --notice-accent-strong: rgba(150, 67, 61, 0.3);
+  --notice-accent-glow: rgba(150, 67, 61, 0.08);
+  --notice-search-bg:
+    linear-gradient(180deg, rgba(255, 249, 244, 0.92), rgba(251, 241, 235, 0.88));
+  --notice-month-bg:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 250, 245, 0.82));
+  display: grid;
+  gap: 14px;
+}
+
+.notice-board[data-source-theme="papa"] {
+  --notice-accent: #96433d;
+  --notice-accent-icon: rgba(150, 67, 61, 0.5);
+  --notice-accent-soft: rgba(237, 210, 203, 0.46);
+  --notice-accent-border: rgba(150, 67, 61, 0.14);
+  --notice-accent-strong: rgba(150, 67, 61, 0.3);
+  --notice-accent-glow: rgba(150, 67, 61, 0.08);
+  --notice-search-bg:
+    linear-gradient(180deg, rgba(255, 247, 243, 0.94), rgba(251, 238, 234, 0.9));
+  --notice-month-bg:
+    linear-gradient(180deg, rgba(255, 253, 251, 0.9), rgba(255, 246, 241, 0.84));
+}
+
+.notice-board[data-source-theme="company"] {
+  --notice-accent: #597492;
+  --notice-accent-icon: rgba(89, 116, 146, 0.5);
+  --notice-accent-soft: rgba(213, 224, 239, 0.52);
+  --notice-accent-border: rgba(89, 116, 146, 0.16);
+  --notice-accent-strong: rgba(89, 116, 146, 0.3);
+  --notice-accent-glow: rgba(89, 116, 146, 0.08);
+  --notice-search-bg:
+    linear-gradient(180deg, rgba(245, 248, 253, 0.94), rgba(234, 240, 249, 0.9));
+  --notice-month-bg:
+    linear-gradient(180deg, rgba(251, 253, 255, 0.9), rgba(241, 246, 252, 0.84));
+}
+
+.notice-source-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 6px;
+  border-radius: 24px;
+  background: var(--notice-accent-soft);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.notice-source-tab {
+  min-height: 62px;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 10px 8px;
+  border: 1px solid rgba(150, 67, 61, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 250, 246, 0.78);
+  color: var(--ink-soft);
+}
+
+.notice-source-tab__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(150, 67, 61, 0.4);
+}
+
+.notice-source-tab[data-notice-source="papa"] .notice-source-tab__dot {
+  background: rgba(150, 67, 61, 0.4);
+}
+
+.notice-source-tab[data-notice-source="company"] .notice-source-tab__dot {
+  background: rgba(89, 116, 146, 0.46);
+}
+
+.notice-source-tab[data-notice-source="papa"].notice-source-tab--active {
+  background: linear-gradient(180deg, rgba(225, 145, 145, 0.9), rgba(204, 120, 120, 0.9));
+  color: #fff9f6;
+  box-shadow: 0 12px 22px rgba(150, 67, 61, 0.18);
+}
+
+.notice-source-tab[data-notice-source="company"].notice-source-tab--active {
+  background: linear-gradient(180deg, rgba(129, 156, 188, 0.92), rgba(91, 118, 148, 0.92));
+  color: #f8fbff;
+  box-shadow: 0 12px 22px rgba(89, 116, 146, 0.18);
+}
+
+.notice-source-tab--active .notice-source-tab__dot {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.notice-source-tab__label {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.notice-source-tab__count {
+  font-size: 0.76rem;
+  opacity: 0.92;
+}
+
+.notice-search-card {
+  padding: 12px 14px;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  background: var(--notice-search-bg);
+  box-shadow: var(--shadow-soft);
+}
+
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 18px;
+  border: 1px solid var(--notice-accent-border);
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.search-field:focus-within {
+  border-color: var(--notice-accent-strong);
+  box-shadow: 0 0 0 4px var(--notice-accent-glow);
+}
+
+.search-field__icon {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--notice-accent-icon);
+  border-radius: 999px;
+  flex: 0 0 auto;
+}
+
+.search-field__icon::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  width: 7px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--notice-accent-icon);
+  transform: rotate(45deg);
+  transform-origin: center;
+}
+
+.notice-board .empty-card {
+  background: var(--notice-month-bg);
+  border-color: var(--notice-accent-border);
+}
+
+.search-input {
+  width: 100%;
+  min-height: 46px;
+  border-radius: 18px;
+  border: 1px solid rgba(150, 67, 61, 0.16);
+  background: rgba(255, 255, 255, 0.86);
+  padding: 0 16px;
+  color: var(--ink);
+}
+
+.search-input--embedded {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.search-input:focus-visible {
+  outline: 2px solid rgba(150, 67, 61, 0.28);
+  outline-offset: 2px;
+}
+
+.search-input--embedded:focus-visible {
+  outline: none;
+}
+
+.notice-months {
+  display: grid;
+  gap: 12px;
+}
+
+.notice-month {
+  padding: 14px;
+  background: var(--notice-month-bg);
+}
+
+.month-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 10px;
+  border: 0;
+  background: transparent;
+  border-radius: var(--radius-md);
+  text-align: left;
+}
+
+.month-header[aria-expanded="true"] {
+  background: rgba(255, 248, 241, 0.68);
+}
+
+.month-header__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+}
+
+.month-header__count {
+  font-size: 0.84rem;
+  color: var(--ink-soft);
+}
+
+.month-header__mark {
+  color: var(--notice-accent);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.month-body {
+  display: grid;
+  gap: 0;
+  padding-top: 6px;
+}
+
+.notice-card__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.notice-card__title {
+  margin: 0 0 10px;
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.notice-card__snippet {
+  text-align: left;
+}
+
+.notice-card__meta-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.notice-card__status--unread {
+  background: rgba(150, 67, 61, 0.14);
+}
+
+.notice-card__status--read {
+  background: rgba(111, 87, 81, 0.12);
+  color: var(--ink-soft);
+}
+
+.notice-card__status--important {
+  background: rgba(182, 137, 75, 0.16);
+  color: #8a5c19;
+}
+
+.notice-source-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.notice-source-chip--papa {
+  background: rgba(150, 67, 61, 0.1);
+  color: var(--accent-strong);
+}
+
+.notice-source-chip--company {
+  background: rgba(182, 137, 75, 0.14);
+  color: #8a5c19;
+}
+
+.notice-list-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+  gap: 12px;
+  border: 0;
+  border-bottom: 1px solid rgba(150, 67, 61, 0.1);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.notice-list-card:last-child {
+  border-bottom: 0;
+}
+
+.notice-list-card__open {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+
+.notice-list-card__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--notice-accent-border);
+}
+
+.notice-list-card__dot--unread {
+  background: var(--notice-accent);
+  box-shadow: 0 0 0 5px var(--notice-accent-glow);
+}
+
+.notice-list-card__body {
+  min-width: 0;
+}
+
+.notice-list-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.notice-list-card__title {
+  margin: 0 0 8px;
+  color: var(--ink);
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.notice-list-card__snippet {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.notice-list-card__avatar {
+  width: 46px;
+  height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: #fff8f5;
+  font-size: 0.95rem;
+  font-weight: 700;
+  box-shadow: 0 10px 18px rgba(63, 33, 22, 0.12);
+}
+
+.notice-list-card__avatar--papa {
+  background: linear-gradient(135deg, #b66a63, #94413b);
+}
+
+.notice-list-card__avatar--company {
+  background: linear-gradient(135deg, #c7a25f, #a87833);
+}
+
+.pin-button {
+  align-self: center;
+  min-width: 42px;
+  width: 42px;
+  min-height: 42px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(150, 67, 61, 0.18);
+  background: rgba(255, 248, 242, 0.92);
+  color: var(--accent-strong);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.pin-button--active {
+  background: linear-gradient(135deg, #b6894b, #996428);
+  color: #fffaf6;
+  box-shadow: 0 10px 18px rgba(153, 100, 40, 0.18);
+}
+
+.empty-card {
+  padding: 24px 18px;
+  border-radius: var(--radius-lg);
+  border: 1px dashed rgba(150, 67, 61, 0.22);
+  text-align: center;
+}
+
+.empty-card .section-title {
+  font-size: 1.05rem;
+  margin-bottom: 10px;
+}
+
+.calendar-shell {
+  position: relative;
+  overflow: hidden;
+  padding: 14px 6px 14px;
+  background:
+    linear-gradient(180deg, rgba(255, 251, 247, 0.96), rgba(245, 234, 226, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: var(--shadow-soft);
+  color: var(--ink);
+}
+
+.panel[data-panel="calendar"] {
+  margin-inline: -14px;
+}
+
+.calendar-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top left, rgba(182, 137, 75, 0.14), transparent 34%),
+    radial-gradient(circle at right 12% top 18%, rgba(150, 67, 61, 0.12), transparent 28%);
+  pointer-events: none;
+}
+
+.calendar-topbar {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 10px;
+}
+
+.calendar-view-switch {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(255, 249, 244, 0.88);
+  border: 1px solid rgba(150, 67, 61, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+.calendar-view-button {
+  min-height: 38px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.calendar-view-button--active {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  color: #fffaf7;
+  box-shadow: 0 12px 22px rgba(120, 49, 44, 0.18);
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.calendar-shell .icon-button {
+  min-width: 64px;
+  background: rgba(255, 249, 244, 0.84);
+  color: var(--accent-strong);
+  border-color: rgba(150, 67, 61, 0.14);
+}
+
+.calendar-shell .icon-button:disabled {
+  opacity: 0.42;
+  cursor: default;
+  box-shadow: none;
+}
+
+.calendar-mode-label {
+  margin: 0 0 4px;
+  color: rgba(150, 67, 61, 0.74);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.calendar-title-block {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.calendar-month-title {
+  font-size: 1.42rem;
+  color: var(--ink);
+}
+
+.calendar-month-view,
+.calendar-week-view {
+  display: grid;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.weekday-row {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 3px;
+}
+
+.calendar-grid {
+  display: grid;
+  --calendar-grid-gap: 3px;
+  --calendar-cell-padding-top: 3px;
+  --calendar-day-row-height: 28px;
+  --calendar-day-row-gap: 6px;
+  --calendar-range-lane-height: 18px;
+  --calendar-range-top: calc(
+    var(--calendar-cell-padding-top) +
+    var(--calendar-day-row-height) +
+    var(--calendar-day-row-gap)
+  );
+  grid-template-columns: minmax(0, 1fr);
+  gap: 3px;
+}
+
+.calendar-week-row {
+  position: relative;
+}
+
+.calendar-week-row__cells {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--calendar-grid-gap);
+}
+
+.weekday-row {
+  margin-bottom: 0;
+  color: var(--ink-soft);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.calendar-cell {
+  display: flex;
+  flex-direction: column;
+  min-height: 86px;
+  padding: 3px 2px 3px;
+  border-radius: 14px;
+  border: 1px solid rgba(150, 67, 61, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(251, 244, 239, 0.92));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+  text-align: left;
+  color: var(--ink);
+}
+
+.calendar-cell--outside {
+  background: rgba(248, 240, 234, 0.72);
+  border-color: rgba(150, 67, 61, 0.04);
+  color: rgba(111, 87, 81, 0.42);
+}
+
+.calendar-cell--today {
+  border-color: rgba(96, 148, 92, 0.58);
+  background:
+    radial-gradient(circle at top right, rgba(255, 223, 105, 0.62), transparent 38%),
+    linear-gradient(180deg, rgba(249, 255, 225, 0.98), rgba(228, 246, 212, 0.96));
+  box-shadow:
+    0 12px 24px rgba(96, 148, 92, 0.16),
+    inset 0 0 0 1px rgba(255, 213, 72, 0.5);
+}
+
+.calendar-cell--selected {
+  border-color: rgba(150, 67, 61, 0.28);
+  box-shadow: inset 0 0 0 1px rgba(150, 67, 61, 0.12);
+}
+
+.calendar-cell--today.calendar-cell--selected {
+  border-color: rgba(96, 148, 92, 0.68);
+  box-shadow:
+    0 12px 24px rgba(96, 148, 92, 0.16),
+    inset 0 0 0 2px rgba(255, 213, 72, 0.58);
+}
+
+.calendar-cell__day {
+  display: inline-flex;
+  padding-left: 1px;
+  color: inherit;
+  font-weight: 700;
+  font-size: 0.88rem;
+  line-height: 1;
+}
+
+.calendar-cell__day-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2px;
+  min-height: var(--calendar-day-row-height);
+  margin-bottom: var(--calendar-day-row-gap);
+}
+
+.calendar-cell--today .calendar-cell__day {
+  min-width: 22px;
+  min-height: 22px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+  border-radius: 999px;
+  background: #f8d44f;
+  color: #295a2e;
+  box-shadow: 0 4px 12px rgba(126, 150, 45, 0.24);
+}
+
+.calendar-cell__garbage,
+.calendar-week-chip__garbage {
+  font-size: 0.72rem;
+  line-height: 1;
+  opacity: 0.9;
+  filter: drop-shadow(0 2px 4px rgba(65, 88, 82, 0.14));
+}
+
+.calendar-cell__day--saturday {
+  color: #5678b1;
+}
+
+.calendar-cell__day--sunday {
+  color: #bc5a55;
+}
+
+.calendar-cell__events {
+  display: grid;
+  gap: 2px;
+  align-content: start;
+  min-width: 0;
+}
+
+.calendar-cell__ranges {
+  position: relative;
+  min-height: calc(var(--range-lanes, 0) * var(--calendar-range-lane-height));
+  margin-bottom: 2px;
+  min-width: 0;
+}
+
+.calendar-cell__range {
+  position: absolute;
+  top: calc(var(--range-lane, 0) * var(--calendar-range-lane-height));
+  height: 15px;
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  border: 1px solid rgba(150, 67, 61, 0.12);
+  font-size: 0.5rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.calendar-cell__range--single {
+  left: 0;
+  right: 0;
+  border-radius: 999px;
+}
+
+.calendar-cell__range--start {
+  left: 0;
+  right: calc(-1 * var(--calendar-grid-gap));
+  padding-right: 8px;
+  border-radius: 999px 0 0 999px;
+}
+
+.calendar-cell__range--middle {
+  left: calc(-1 * var(--calendar-grid-gap));
+  right: calc(-1 * var(--calendar-grid-gap));
+  border-radius: 0;
+}
+
+.calendar-cell__range--end {
+  left: calc(-1 * var(--calendar-grid-gap));
+  right: 0;
+  padding-left: 8px;
+  border-radius: 0 999px 999px 0;
+}
+
+.calendar-cell__range--color-default {
+  border-color: rgba(150, 67, 61, 0.14);
+  background:
+    linear-gradient(180deg, rgba(250, 237, 230, 0.98), rgba(242, 223, 213, 0.94));
+  color: #864b41;
+}
+
+.calendar-cell__range--color-red {
+  border-color: rgba(193, 73, 66, 0.16);
+  background:
+    linear-gradient(180deg, rgba(252, 228, 226, 0.98), rgba(246, 212, 208, 0.94));
+  color: #9f3933;
+}
+
+.calendar-cell__range--color-green {
+  border-color: rgba(74, 131, 117, 0.16);
+  background:
+    linear-gradient(180deg, rgba(223, 242, 236, 0.98), rgba(206, 231, 224, 0.94));
+  color: #24594d;
+}
+
+.calendar-cell__range--color-blue {
+  border-color: rgba(83, 118, 171, 0.16);
+  background:
+    linear-gradient(180deg, rgba(228, 238, 252, 0.98), rgba(214, 227, 246, 0.94));
+  color: #355f9a;
+}
+
+.calendar-cell__chip,
+.calendar-cell__more {
+  display: block;
+  padding: 2px 3px;
+  border-radius: 7px;
+  font-size: 0.54rem;
+  line-height: 1.16;
+  text-align: left;
+  white-space: normal;
+  word-break: break-word;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  min-height: 2.32em;
+}
+
+.calendar-cell__chip {
+  border: 1px solid rgba(150, 67, 61, 0.12);
+  background:
+    linear-gradient(180deg, rgba(250, 237, 230, 0.98), rgba(242, 223, 213, 0.94));
+  color: #864b41;
+}
+
+.calendar-cell__chip--color-default {
+  border-color: rgba(150, 67, 61, 0.12);
+  background:
+    linear-gradient(180deg, rgba(250, 237, 230, 0.98), rgba(242, 223, 213, 0.94));
+  color: #864b41;
+}
+
+.calendar-cell__chip--color-red {
+  border-color: rgba(193, 73, 66, 0.16);
+  background:
+    linear-gradient(180deg, rgba(252, 228, 226, 0.98), rgba(246, 212, 208, 0.94));
+  color: #9f3933;
+}
+
+.calendar-cell__chip--color-green {
+  border-color: rgba(74, 131, 117, 0.16);
+  background:
+    linear-gradient(180deg, rgba(223, 242, 236, 0.98), rgba(206, 231, 224, 0.94));
+  color: #24594d;
+}
+
+.calendar-cell__chip--color-blue {
+  border-color: rgba(83, 118, 171, 0.16);
+  background:
+    linear-gradient(180deg, rgba(228, 238, 252, 0.98), rgba(214, 227, 246, 0.94));
+  color: #355f9a;
+}
+
+.calendar-cell__more {
+  min-height: 0;
+  background: rgba(150, 67, 61, 0.08);
+  color: var(--accent-strong);
+  text-align: center;
+  display: block;
+  line-height: 1.25;
+}
+
+.calendar-week-strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.calendar-week-chip {
+  min-height: 74px;
+  padding: 8px 4px;
+  border-radius: 16px;
+  border: 1px solid rgba(150, 67, 61, 0.08);
+  background: rgba(255, 255, 255, 0.76);
+  color: var(--ink);
+  text-align: center;
+}
+
+.calendar-week-chip--active {
+  background:
+    linear-gradient(180deg, rgba(255, 245, 240, 0.98), rgba(247, 231, 223, 0.96));
+  border-color: rgba(150, 67, 61, 0.22);
+  box-shadow: 0 12px 26px rgba(120, 49, 44, 0.12);
+}
+
+.calendar-week-chip--today {
+  border-color: rgba(96, 148, 92, 0.5);
+  background:
+    radial-gradient(circle at top right, rgba(255, 223, 105, 0.48), transparent 42%),
+    linear-gradient(180deg, rgba(249, 255, 225, 0.98), rgba(228, 246, 212, 0.96));
+  box-shadow: inset 0 0 0 1px rgba(255, 213, 72, 0.4);
+}
+
+.calendar-week-chip--outside {
+  color: rgba(111, 87, 81, 0.42);
+}
+
+.calendar-week-chip__weekday {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+}
+
+.calendar-week-chip__day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  margin-top: 8px;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.calendar-week-chip__count {
+  display: block;
+  min-height: 1em;
+  margin-top: 8px;
+  font-size: 0.72rem;
+  color: var(--accent);
+}
+
+.calendar-week-focus {
+  padding: 14px 12px 12px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(248, 237, 230, 0.9));
+}
+
+.calendar-week-focus__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.calendar-week-focus__title {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.calendar-week-focus__count {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(150, 67, 61, 0.08);
+  color: var(--accent-strong);
+  font-size: 0.76rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.calendar-week-floating {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.calendar-week-floating__item {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(150, 67, 61, 0.1);
+  background:
+    linear-gradient(180deg, rgba(255, 248, 243, 0.96), rgba(248, 236, 227, 0.92));
+  color: var(--ink);
+  text-align: left;
+}
+
+.calendar-week-floating__item--tone-default {
+  border-color: rgba(150, 67, 61, 0.1);
+  background:
+    linear-gradient(180deg, rgba(255, 248, 243, 0.96), rgba(248, 236, 227, 0.92));
+}
+
+.calendar-week-floating__item--tone-red {
+  border-color: rgba(193, 73, 66, 0.14);
+  background:
+    linear-gradient(180deg, rgba(252, 234, 232, 0.98), rgba(247, 220, 216, 0.94));
+}
+
+.calendar-week-floating__item--tone-green {
+  border-color: rgba(74, 131, 117, 0.14);
+  background:
+    linear-gradient(180deg, rgba(229, 244, 239, 0.98), rgba(214, 235, 227, 0.94));
+}
+
+.calendar-week-floating__item--tone-blue {
+  border-color: rgba(83, 118, 171, 0.14);
+  background:
+    linear-gradient(180deg, rgba(234, 241, 252, 0.98), rgba(220, 230, 247, 0.94));
+}
+
+.calendar-week-floating__time {
+  color: var(--accent);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.calendar-week-floating__title {
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.calendar-week-timeline {
+  position: relative;
+  min-height: 864px;
+}
+
+.calendar-week-hours {
+  position: relative;
+  z-index: 1;
+}
+
+.calendar-week-hour {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 10px;
+  height: 54px;
+}
+
+.calendar-week-hour__label {
+  color: rgba(111, 87, 81, 0.74);
+  font-size: 0.78rem;
+  line-height: 1;
+}
+
+.calendar-week-hour__line {
+  height: 100%;
+  border-top: 1px solid rgba(150, 67, 61, 0.08);
+}
+
+.calendar-week-events {
+  position: absolute;
+  inset: 0 0 0 46px;
+  z-index: 2;
+}
+
+.calendar-week-event {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(74, 131, 117, 0.18);
+  background:
+    linear-gradient(180deg, rgba(223, 242, 236, 0.98), rgba(206, 231, 224, 0.94));
+  box-shadow: 0 12px 24px rgba(74, 131, 117, 0.12);
+  color: var(--ink);
+  text-align: left;
+}
+
+.calendar-week-event--tone-default {
+  border-color: rgba(150, 67, 61, 0.16);
+  background:
+    linear-gradient(180deg, rgba(252, 238, 231, 0.98), rgba(243, 224, 214, 0.94));
+  box-shadow: 0 12px 24px rgba(150, 67, 61, 0.12);
+}
+
+.calendar-week-event--tone-red {
+  border-color: rgba(193, 73, 66, 0.18);
+  background:
+    linear-gradient(180deg, rgba(252, 228, 226, 0.98), rgba(246, 212, 208, 0.94));
+  box-shadow: 0 12px 24px rgba(193, 73, 66, 0.12);
+}
+
+.calendar-week-event--tone-green {
+  border-color: rgba(74, 131, 117, 0.18);
+  background:
+    linear-gradient(180deg, rgba(223, 242, 236, 0.98), rgba(206, 231, 224, 0.94));
+  box-shadow: 0 12px 24px rgba(74, 131, 117, 0.12);
+}
+
+.calendar-week-event--tone-blue {
+  border-color: rgba(83, 118, 171, 0.18);
+  background:
+    linear-gradient(180deg, rgba(228, 238, 252, 0.98), rgba(214, 227, 246, 0.94));
+  box-shadow: 0 12px 24px rgba(83, 118, 171, 0.12);
+}
+
+.calendar-week-event__time {
+  display: inline-flex;
+  margin-bottom: 8px;
+  padding: 0;
+  background: transparent;
+  color: #2a6558;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.calendar-week-event__title {
+  display: block;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.calendar-week-empty {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-soft);
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.calendar-week-now {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: #ff5b5b;
+  box-shadow: 0 0 0 1px rgba(255, 91, 91, 0.12);
+}
+
+.calendar-week-now::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #ff5b5b;
+  transform: translateY(-50%);
+}
+
+.bottom-nav {
+  position: fixed;
+  left: 50%;
+  bottom: max(16px, calc(16px + env(safe-area-inset-bottom)));
+  transform: translateX(-50%);
+  width: min(calc(100vw - 24px), 420px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 10px;
+  border-radius: 999px;
+  background: rgba(255, 250, 246, 0.86);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: var(--shadow-strong);
+  backdrop-filter: blur(16px);
+}
+
+.nav-button {
+  padding: 0 10px;
+  background: transparent;
+  color: var(--ink-soft);
+  border-color: transparent;
+}
+
+.nav-button--active {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  color: #fffaf7;
+  box-shadow: 0 10px 18px rgba(120, 49, 44, 0.2);
+}
+
+.modal-root {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(31, 18, 15, 0.44);
+  backdrop-filter: blur(6px);
+}
+
+.modal-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(calc(100vw - 28px), 420px);
+  max-height: min(82vh, 700px);
+  overflow: auto;
+  transform: translate(-50%, -50%);
+  border-radius: 30px;
+  padding: 18px 18px 20px;
+  background:
+    linear-gradient(180deg, rgba(255, 252, 248, 0.98), rgba(249, 239, 231, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  box-shadow: 0 26px 70px rgba(26, 12, 10, 0.28);
+}
+
+.modal-card--plain .modal-close {
+  margin-bottom: 4px;
+}
+
+.modal-card--plain .modal-body {
+  margin-top: 8px;
+}
+
+.modal-handle {
+  width: 54px;
+  height: 6px;
+  margin: 0 auto 14px;
+  border-radius: 999px;
+  background: rgba(150, 67, 61, 0.14);
+}
+
+.modal-close {
+  display: inline-flex;
+  margin-left: auto;
+  margin-bottom: 10px;
+  padding: 0 14px;
+}
+
+.modal-kicker,
+.modal-meta {
+  margin: 0;
+  text-align: center;
+}
+
+.modal-kicker {
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.modal-title {
+  margin-top: 8px;
+  font-size: 1.35rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.modal-meta {
+  margin-top: 10px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.modal-card--notice .modal-title {
+  color: var(--ink);
+}
+
+.modal-card--notice .modal-meta {
+  color: #7d8e58;
+  font-weight: 700;
+}
+
+.modal-body {
+  margin-top: 18px;
+  display: grid;
+  gap: 14px;
+  color: var(--ink);
+  line-height: 1.9;
+  text-align: left;
+}
+
+.modal-card--notice .modal-body {
+  color: var(--ink-soft);
+}
+
+.modal-body p {
+  margin: 0;
+}
+
+.notice-detail-body {
+  display: grid;
+  gap: 14px;
+}
+
+.notice-detail-body p {
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(150, 67, 61, 0.08);
+}
+
+.notice-attachments {
+  display: grid;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.notice-attachment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 52px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(150, 67, 61, 0.12);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(250, 239, 232, 0.88));
+  color: var(--accent-strong);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.notice-attachment__type {
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(150, 67, 61, 0.09);
+  color: var(--accent);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+
+.notice-attachment__name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+
+.modal-body .empty-text {
+  text-align: center;
+}
+
+.modal-actions {
+  margin-top: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.unread-summary {
+  display: grid;
+  gap: 18px;
+}
+
+.unread-section {
+  display: grid;
+  gap: 12px;
+}
+
+.unread-section__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.unread-section__title {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--ink);
+  text-align: left;
+}
+
+.unread-section__controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.unread-bulk-read {
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(150, 67, 61, 0.12);
+  background: rgba(255, 249, 244, 0.88);
+  color: var(--accent-strong);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.unread-bulk-read:disabled {
+  opacity: 0.42;
+  cursor: default;
+  box-shadow: none;
+}
+
+.unread-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 58px;
+  min-height: 32px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.unread-count--zero {
+  background: rgba(73, 125, 201, 0.12);
+  color: #3569b8;
+}
+
+.unread-count--active {
+  background: rgba(201, 73, 66, 0.12);
+  color: #c14942;
+}
+
+.unread-list {
+  display: grid;
+  gap: 10px;
+}
+
+.unread-item {
+  width: 100%;
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(150, 67, 61, 0.12);
+  background: rgba(255, 255, 255, 0.76);
+  text-align: left;
+}
+
+.unread-item__meta {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.unread-item__title {
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.unread-item__summary {
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.calendar-event-list {
+  display: grid;
+  gap: 12px;
+}
+
+.calendar-event {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--line);
+}
+
+.calendar-event--tone-default {
+  border-color: rgba(150, 67, 61, 0.12);
+  background:
+    linear-gradient(180deg, rgba(255, 248, 243, 0.96), rgba(248, 236, 227, 0.92));
+}
+
+.calendar-event--tone-red {
+  border-color: rgba(193, 73, 66, 0.14);
+  background:
+    linear-gradient(180deg, rgba(252, 234, 232, 0.98), rgba(247, 220, 216, 0.94));
+}
+
+.calendar-event--tone-green {
+  border-color: rgba(74, 131, 117, 0.14);
+  background:
+    linear-gradient(180deg, rgba(229, 244, 239, 0.98), rgba(214, 235, 227, 0.94));
+}
+
+.calendar-event--tone-blue {
+  border-color: rgba(83, 118, 171, 0.14);
+  background:
+    linear-gradient(180deg, rgba(234, 241, 252, 0.98), rgba(220, 230, 247, 0.94));
+}
+
+.calendar-event__title {
+  margin: 10px 0 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.calendar-event__description {
+  margin: 0;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
+.calendar-event__description-block {
+  display: grid;
+  gap: 8px;
+}
+
+.calendar-event__description--heading {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.calendar-event__description-list {
+  margin: 0;
+  padding-left: 1.1em;
+  color: var(--ink-soft);
+  line-height: 1.65;
+  text-align: left;
+}
+
+.calendar-event__description-item + .calendar-event__description-item {
+  margin-top: 4px;
+}
+
+.calendar-event__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.schedule-action {
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(150, 67, 61, 0.12);
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--accent-strong);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.schedule-action--tone {
+  background: rgba(255, 249, 244, 0.92);
+}
+
+.schedule-action--danger {
+  color: #b0443d;
+  border-color: rgba(193, 73, 66, 0.16);
+}
+
+.schedule-edit-form {
+  display: grid;
+  gap: 14px;
+}
+
+.schedule-edit-field {
+  display: grid;
+  gap: 8px;
+}
+
+.schedule-edit-input,
+.schedule-edit-textarea {
+  width: 100%;
+  border-radius: 18px;
+  border: 1px solid rgba(150, 67, 61, 0.16);
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--ink);
+  padding: 12px 14px;
+}
+
+.schedule-edit-input:focus-visible,
+.schedule-edit-textarea:focus-visible {
+  outline: 2px solid rgba(150, 67, 61, 0.28);
+  outline-offset: 2px;
+}
+
+.schedule-edit-textarea {
+  min-height: 112px;
+  resize: vertical;
+  font: inherit;
+}
+
+.schedule-edit-error {
+  margin: 0;
+  color: #c14942;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.schedule-delete-confirm {
+  display: grid;
+  gap: 10px;
+}
+
+.mark-text {
+  padding: 0 0.18em;
+  border-radius: 4px;
+  background: rgba(182, 137, 75, 0.26);
+}
+
+@media (min-width: 700px) {
+  .app-shell {
+    padding-bottom: 128px;
+  }
+
+  .topic-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .panel[data-panel="calendar"] {
+    margin-inline: 0;
+  }
+
+  .calendar-shell {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 380px) {
+  .status-strip,
+  .shortcut-grid,
+  .topic-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar-grid {
+    gap: 6px;
+  }
+
+  .notice-source-tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .notice-list-card {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .notice-list-card__open {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .notice-list-card__avatar {
+    display: none;
+  }
+
+  .pin-button {
+    justify-self: start;
+  }
+
+  .calendar-cell {
+    min-height: 80px;
+    padding: 3px 2px;
+  }
+
+  .calendar-cell__chip,
+  .calendar-cell__more {
+    font-size: 0.5rem;
+    min-height: 2.18em;
+  }
+
+  .calendar-cell__range {
+    font-size: 0.46rem;
+  }
+
+  .calendar-week-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .calendar-week-hour {
+    grid-template-columns: 32px minmax(0, 1fr);
+  }
+
+  .calendar-week-events {
+    left: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+    </style>
+  </head>
+  <body>
+    <noscript>
+      <div class="noscript-message">
+        このページを表示するには、JavaScriptを有効にしてください。
+      </div>
+    </noscript>
+
+    <div class="auth-gate" id="authGate" hidden>
+      <div class="auth-gate__backdrop" aria-hidden="true"></div>
+      <section class="auth-card" aria-label="ログイン画面">
+        <h1 class="auth-card__title">パスワードをご入力ください。</h1>
+        <p class="auth-card__text">
+          この確認は一回のみです。<br />
+          ログイン成功後、再入力する必要はありません。
+        </p>
+
+        <div class="auth-display" id="authDisplay" aria-live="polite">
+          <span class="auth-slot" data-auth-slot></span>
+          <span class="auth-slot" data-auth-slot></span>
+          <span class="auth-slot" data-auth-slot></span>
+          <span class="auth-slot" data-auth-slot></span>
+        </div>
+
+        <p class="auth-error" id="authError" hidden>パスワードが違います。</p>
+
+        <div class="auth-keypad" aria-label="数字キー">
+          <button type="button" class="auth-key pressable" data-auth-digit="1">1</button>
+          <button type="button" class="auth-key pressable" data-auth-digit="2">2</button>
+          <button type="button" class="auth-key pressable" data-auth-digit="3">3</button>
+          <button type="button" class="auth-key pressable" data-auth-digit="4">4</button>
+          <button type="button" class="auth-key pressable" data-auth-digit="5">5</button>
+          <button type="button" class="auth-key pressable" data-auth-digit="6">6</button>
+          <button type="button" class="auth-key pressable" data-auth-digit="7">7</button>
+          <button type="button" class="auth-key pressable" data-auth-digit="8">8</button>
+          <button type="button" class="auth-key pressable" data-auth-digit="9">9</button>
+          <button type="button" class="auth-key auth-key--sub pressable" data-auth-clear>
+            消去
+          </button>
+          <button type="button" class="auth-key pressable" data-auth-digit="0">0</button>
+          <button type="button" class="auth-key auth-key--sub pressable" data-auth-delete>
+            ←
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <div class="app-backdrop" aria-hidden="true">
+      <div class="app-backdrop__glow app-backdrop__glow--left"></div>
+      <div class="app-backdrop__glow app-backdrop__glow--right"></div>
+    </div>
+
+    <div class="app-shell" id="appShell" hidden>
+      <header class="topbar">
+        <div class="topbar-grid">
+          <div class="brand-block brand-block--single">
+            <h1 class="brand-title" id="appTitle"></h1>
+            <p class="topbar-meta" id="lastUpdated" hidden></p>
+          </div>
+        </div>
+      </header>
+
+      <main class="panel-host">
+        <section class="panel panel--active" data-panel="home">
+          <section class="status-strip" aria-label="ホームの導線">
+            <button
+              type="button"
+              class="status-pill status-pill--button status-pill--album pressable"
+              id="homeAlbumButton"
+            >
+              <strong class="status-pill__value">アルバム</strong>
+            </button>
+            <button
+              type="button"
+              class="status-pill status-pill--button status-pill--unread pressable"
+              id="unreadSummaryButton"
+            >
+              <span class="status-pill__label">未確認</span>
+              <strong class="status-pill__value" id="unreadCount"></strong>
+              <span class="status-pill__hint" id="unreadBreakdown"></span>
+            </button>
+          </section>
+
+          <article class="hero-card hero-card--topic">
+            <div class="section-head">
+              <h2 class="section-title">今日のトピック</h2>
+            </div>
+
+            <div class="topic-grid" id="topicCards"></div>
+          </article>
+
+          <article class="pinned-card pinned-card--saved" id="pinnedNoticeSection"></article>
+        </section>
+
+        <section class="panel" data-panel="notices" hidden>
+          <section class="notice-board" id="noticeBoard">
+            <div class="notice-source-tabs" role="tablist" aria-label="お知らせの送信元">
+              <button
+                type="button"
+                class="notice-source-tab pressable"
+                id="noticeSourcePapa"
+                data-notice-source="papa"
+                role="tab"
+                aria-selected="true"
+              >
+                <span class="notice-source-tab__dot" aria-hidden="true"></span>
+                <span class="notice-source-tab__label">プライベート</span>
+                <span class="notice-source-tab__count" data-source-count="papa"></span>
+              </button>
+              <button
+                type="button"
+                class="notice-source-tab pressable"
+                id="noticeSourceCompany"
+                data-notice-source="company"
+                role="tab"
+                aria-selected="false"
+              >
+                <span class="notice-source-tab__dot" aria-hidden="true"></span>
+                <span class="notice-source-tab__label">業務連絡</span>
+                <span class="notice-source-tab__count" data-source-count="company"></span>
+              </button>
+            </div>
+
+            <section class="notice-search-card">
+              <label class="field-label" for="noticeSearch">お知らせを検索</label>
+              <div class="search-field">
+                <span class="search-field__icon" aria-hidden="true"></span>
+                <input
+                  id="noticeSearch"
+                  class="search-input search-input--embedded"
+                  type="search"
+                  placeholder="お知らせを検索"
+                  autocomplete="off"
+                />
+              </div>
+            </section>
+
+            <div class="notice-months" id="noticeMonths"></div>
+          </section>
+        </section>
+
+        <section class="panel" data-panel="calendar" hidden>
+          <section class="calendar-shell" id="calendarShell">
+            <div class="calendar-topbar">
+              <div class="calendar-view-switch" role="tablist" aria-label="表示切り替え">
+                <button
+                  type="button"
+                  class="calendar-view-button pressable"
+                  data-calendar-view="month"
+                  role="tab"
+                  aria-selected="true"
+                >
+                  月表示
+                </button>
+                <button
+                  type="button"
+                  class="calendar-view-button pressable"
+                  data-calendar-view="week"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  週表示
+                </button>
+              </div>
+            </div>
+
+            <div class="calendar-header">
+              <button
+                type="button"
+                class="icon-button pressable"
+                data-month-nav="prev"
+                aria-label="前の月へ"
+              >
+                前月
+              </button>
+
+              <div class="calendar-title-block">
+                <p class="calendar-mode-label" id="calendarModeLabel"></p>
+                <h3 class="calendar-month-title" id="calendarMonthLabel"></h3>
+              </div>
+
+              <button
+                type="button"
+                class="icon-button pressable"
+                data-month-nav="next"
+                aria-label="次の月へ"
+              >
+                次月
+              </button>
+            </div>
+
+            <div class="calendar-month-view" id="calendarMonthView">
+              <div class="weekday-row" aria-hidden="true">
+                <span>月</span>
+                <span>火</span>
+                <span>水</span>
+                <span>木</span>
+                <span>金</span>
+                <span>土</span>
+                <span>日</span>
+              </div>
+
+              <div class="calendar-grid" id="calendarGrid"></div>
+            </div>
+
+            <div class="calendar-week-view" id="calendarWeekView" hidden>
+              <div class="calendar-week-strip" id="calendarWeekStrip"></div>
+
+              <section class="calendar-week-focus">
+                <div class="calendar-week-focus__head">
+                  <div>
+                    <p class="calendar-mode-label">週の予定</p>
+                    <h4 class="calendar-week-focus__title" id="calendarWeekDateLabel"></h4>
+                  </div>
+                  <span class="calendar-week-focus__count" id="calendarWeekCount"></span>
+                </div>
+
+                <div class="calendar-week-timeline" id="calendarWeekTimeline"></div>
+              </section>
+            </div>
+          </section>
+        </section>
+      </main>
+
+      <nav class="bottom-nav" aria-label="画面切り替え">
+        <button
+          type="button"
+          class="nav-button nav-button--active pressable"
+          data-open-panel="home"
+        >
+          ホーム
+        </button>
+        <button type="button" class="nav-button pressable" data-open-panel="notices">
+          お知らせ
+        </button>
+        <button
+          type="button"
+          class="nav-button pressable"
+          data-open-panel="calendar"
+        >
+          カレンダー
+        </button>
+      </nav>
+    </div>
+
+    <div class="modal-root" id="modalRoot" hidden>
+      <div class="modal-backdrop" data-close-modal></div>
+      <div
+        class="modal-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+      >
+        <div class="modal-handle" aria-hidden="true"></div>
+        <button
+          type="button"
+          class="modal-close pressable"
+          data-close-modal
+          aria-label="閉じる"
+        >
+          閉じる
+        </button>
+        <p class="modal-kicker" id="modalKicker"></p>
+        <h3 class="modal-title" id="modalTitle"></h3>
+        <p class="modal-meta" id="modalMeta"></p>
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-actions" id="modalActions"></div>
+      </div>
+    </div>
+
+    <script>
+window.APP_DATA = {
+  meta: {
+    appTitle: "たつこをミマモルメ",
+    albumUrl: "https://www.notion.so/9fa80b7792384c37ab93db1468f7d30d?v=857401e75b6746d388c417df25f4536e&source=copy_link",
+  },
+  notices: [
+    {
+      id: "notice-2026-04-01-hiyoshi-class-list",
+      source: "papa",
+      title: "日吉小学校 新一年生クラス分けデータ",
+      publishedAt: "2026-04-01T09:00",
+      updatedAt: "2026-04-13T09:00",
+      body:
+        "日吉小学校の新一年生のクラス分け写真データをもとに、Manus AIを利用して情報を抽出し、データ化したものを共有します。",
+      attachments: [
+        {
+          label: "日吉小学校 R8.1年生 クラス表 .pdf",
+          href: "./hiyoshi-r8-grade1-class-list.pdf",
+          download: "日吉小学校 R8.1年生 クラス表 .pdf",
+          type: "PDF",
+        },
+      ],
+    },
+  ],
+  // 既存の予定idは端末内の編集内容を引き継ぐため、更新時も変更しない。
+  schedules: [
+    {
+      id: "schedule-2026-04-01-retirement",
+      date: "2026-04-01",
+      title: "退職のご挨拶",
+      description: "",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-04-02-dinner-friend",
+      date: "2026-04-02",
+      title: "友人とご飯",
+      description: "",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-04-03-flower-viewing",
+      date: "2026-04-03",
+      title: "家族で花見",
+      description: "",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-04-06-day-off",
+      date: "2026-04-06",
+      title: "いきいき休み",
+      timeLabel: "終日",
+      description: "翌日が入学式のため。",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-04-07-entrance-ceremony",
+      date: "2026-04-07",
+      title: "入学式",
+      timeLabel: "終日",
+      description: "",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-04-08-school-start",
+      date: "2026-04-08",
+      title: "始業式",
+      timeLabel: "終日",
+      description: "",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-04-09-group-commute",
+      date: "2026-04-09",
+      title: "通常授業・初めての集団登校",
+      description: "集団登校の初日なので時間厳守。",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-04-10-group-commute-follow",
+      date: "2026-04-10",
+      title: "通常授業・集団登校へ同行",
+      description: "梨絵が集団登校に同行。",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-04-11-papa-meeting",
+      date: "2026-04-11",
+      title: "パパ会",
+      timeLabel: "お昼",
+      description: "",
+      updatedAt: "2026-04-08T09:00",
+    },
+    {
+      id: "schedule-2026-04-13-karaoke",
+      date: "2026-04-13",
+      title: "三ノ宮でカラオケ",
+      timeLabel: "昼過ぎ〜18:00ごろ",
+      description: "18:00解散、19:00帰宅予定。",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-04-13-wife-work-start",
+      date: "2026-04-13",
+      title: "妻 7:00出勤開始",
+      timeLabel: "朝から",
+      description: "この日以降は7:00出勤。",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-04-14-dinner-friend",
+      date: "2026-04-14",
+      title: "友人とご飯",
+      description: "時間と場所は未定。",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-04-15-my-number-card-renewal",
+      date: "2026-04-15",
+      title: "マイナンバーカードの更新",
+      description: "",
+      updatedAt: "2026-04-14T09:00",
+    },
+    {
+      id: "schedule-2026-04-18-takaishi-dinner",
+      date: "2026-04-18",
+      title: "高石で友人とご飯",
+      description: "",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-04-19-takaishi-dinner",
+      date: "2026-04-19",
+      title: "高石で友人とご飯",
+      timeLabel: "時間未定",
+      description: "夜は堀江へ帰宅。",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-04-21-dinner-friend",
+      date: "2026-04-21",
+      title: "友人とご飯",
+      start: "17:00",
+      end: "22:00",
+      description: "",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-04-22-kobe-visit",
+      date: "2026-04-22",
+      title: "神戸三宮店に挨拶",
+      description: "陽葵が同行。",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-04-24-dinner-itohachan",
+      date: "2026-04-24",
+      title: "いとはちゃんパパと夜ご飯",
+      timeLabel: "夜",
+      description: "",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-05-25-family-spa-suminoe",
+      date: "2026-04-25",
+      title: "家族でスパ住之江",
+      description: "",
+      updatedAt: "2026-04-21T10:00",
+    },
+    {
+      id: "schedule-2026-04-27-dinner-friend",
+      date: "2026-04-27",
+      title: "友人とご飯",
+      description: "時間と場所は未定。",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-04-27-kobe-greeting",
+      date: "2026-04-27",
+      title: "神戸三宮に挨拶？",
+      description: "",
+      updatedAt: "2026-04-21T12:00",
+    },
+    {
+      id: "schedule-2026-04-28-class-observation",
+      date: "2026-04-28",
+      title: "授業参観",
+      description: "",
+      updatedAt: "2026-04-08T09:00",
+    },
+    {
+      id: "schedule-2026-04-29-hinata-birthday",
+      date: "2026-04-29",
+      title: "ひなた誕生日会",
+      description: "",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-05-01-new-job",
+      date: "2026-05-01",
+      title: "新しい職場の入社式",
+      description: "",
+      updatedAt: "2026-04-04T10:15",
+    },
+    {
+      id: "schedule-2026-05-02-golden-week",
+      date: "2026-05-02",
+      endDate: "2026-05-06",
+      title: "ゴールデンウィークのお休み",
+      description: "",
+      updatedAt: "2026-04-21T10:00",
+    },
+    {
+      id: "schedule-2026-05-03-boatrace-fujii",
+      date: "2026-05-03",
+      title: "藤井さんとボートレース",
+      timeLabel: "15:30〜",
+      description: "住之江競艇。",
+      updatedAt: "2026-04-21T10:00",
+    },
+    {
+      id: "schedule-2026-05-05-live-father",
+      date: "2026-05-05",
+      title: "お父さんとライブ",
+      timeLabel: "9:00待ち合わせ",
+      description:
+        "高石駅で9:00待ち合わせ。いづみ大津駅からバスで向かう予定。\nOTODAMA'26、10:00開場・11:00開演。会場は泉大津フェニックス。\n出演グループ\n・エレキアフロ: 超能力戦士ドリアン、ピーナッツくん、Hump Back、尾崎世界観（クリープハイプ）、フレデリック、キュウソネコカミ\n・ジェットバス: コレサワ、四星球、小山田壮平BAND、銀杏BOYZ、To be Announced...、ORANGE RANGE、岡崎体育\n・源泉テント: フラワーカンパニーズ、Maverick Mom、カライドスコープ、FUJIBASE、天々高々、Sundae May Club、Blue Mash、トモフスキー",
+      updatedAt: "2026-04-09T14:20",
+    },
+    {
+      id: "schedule-2026-05-07-second-work-day",
+      date: "2026-05-07",
+      title: "2回目の出社",
+      description: "",
+      updatedAt: "2026-04-21T10:00",
+    },
+  ],
+  recurringScheduleRules: [
+    {
+      id: "recurring-wednesday-movie-1300",
+      type: "weekly",
+      weekday: 3,
+      startDate: "2026-04-01",
+      title: "映画1300円の日",
+      timeLabel: "毎週水曜",
+      description: "",
+      color: "green",
+      updatedAt: "2026-04-14T09:00",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-my-number-card-renewal",
+      type: "yearly-interval",
+      startDate: "2031-04-15",
+      intervalYears: 5,
+      title: "マイナンバーカード更新期限",
+      timeLabel: "更新期限",
+      description: "",
+      color: "red",
+      updatedAt: "2026-04-15T09:00",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-mothers-day",
+      type: "annual-nth-weekday",
+      month: 5,
+      weekday: 0,
+      nth: 2,
+      startDate: "2026-05-01",
+      title: "母の日",
+      timeLabel: "5月第2日曜",
+      description: "",
+      color: "red",
+      updatedAt: "2026-04-20T09:00",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-fathers-day",
+      type: "annual-nth-weekday",
+      month: 6,
+      weekday: 0,
+      nth: 3,
+      startDate: "2026-06-01",
+      title: "父の日",
+      timeLabel: "6月第3日曜",
+      description: "",
+      color: "blue",
+      updatedAt: "2026-04-20T09:00",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-self-birthday",
+      type: "yearly-interval",
+      startDate: "2026-04-15",
+      intervalYears: 1,
+      title: "自分の誕生日",
+      timeLabel: "毎年4月15日",
+      description: "",
+      color: "blue",
+      updatedAt: "2026-04-20T10:00",
+      includeInUnread: false,
+      editable: true,
+      baseYear: 1998,
+      titleFormat: "%s（%d歳）",
+    },
+    {
+      id: "recurring-tanabata",
+      type: "yearly-interval",
+      startDate: "2026-07-07",
+      intervalYears: 1,
+      title: "七夕",
+      timeLabel: "毎年7月7日",
+      description: "",
+      color: "blue",
+      updatedAt: "2026-04-24T09:00",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-halloween",
+      type: "yearly-interval",
+      startDate: "2026-10-31",
+      intervalYears: 1,
+      title: "ハロウィン",
+      timeLabel: "毎年10月31日",
+      description: "",
+      color: "default",
+      updatedAt: "2026-04-24T09:00",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-good-couple-day",
+      type: "yearly-interval",
+      startDate: "2026-11-22",
+      intervalYears: 1,
+      title: "いい夫婦の日",
+      timeLabel: "毎年11月22日",
+      description: "",
+      color: "green",
+      updatedAt: "2026-04-20T10:00",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-mother-birthday",
+      type: "yearly-interval",
+      startDate: "2026-11-23",
+      intervalYears: 1,
+      title: "お母さんの誕生日",
+      timeLabel: "毎年11月23日",
+      description: "",
+      color: "red",
+      updatedAt: "2026-04-20T10:00",
+      includeInUnread: false,
+      editable: true,
+      baseYear: 1969,
+      titleFormat: "%s（%d歳）",
+    },
+    {
+      id: "recurring-christmas-eve",
+      type: "yearly-interval",
+      startDate: "2026-12-24",
+      intervalYears: 1,
+      title: "クリスマスイブ",
+      timeLabel: "毎年12月24日",
+      description: "",
+      color: "green",
+      updatedAt: "2026-04-24T09:00",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-christmas",
+      type: "yearly-interval",
+      startDate: "2026-12-25",
+      intervalYears: 1,
+      title: "クリスマス",
+      timeLabel: "毎年12月25日",
+      description: "",
+      color: "red",
+      updatedAt: "2026-04-24T09:00",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-wife-birthday",
+      type: "yearly-interval",
+      startDate: "2026-12-30",
+      intervalYears: 1,
+      title: "嫁の誕生日",
+      timeLabel: "毎年12月30日",
+      description: "",
+      color: "red",
+      updatedAt: "2026-04-20T10:00",
+      includeInUnread: false,
+      editable: true,
+      baseYear: 1991,
+      titleFormat: "%s（%d歳）",
+    },
+    {
+      id: "recurring-valentines-day",
+      type: "yearly-interval",
+      startDate: "2026-02-14",
+      intervalYears: 1,
+      title: "バレンタインデー",
+      timeLabel: "毎年2月14日",
+      description: "",
+      color: "red",
+      updatedAt: "2026-04-24T09:00",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-white-day",
+      type: "yearly-interval",
+      startDate: "2026-03-14",
+      intervalYears: 1,
+      title: "ホワイトデー",
+      timeLabel: "毎年3月14日",
+      description: "",
+      color: "blue",
+      updatedAt: "2026-04-24T09:00",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-new-year-day-1",
+      type: "yearly-interval",
+      startDate: "2027-01-01",
+      intervalYears: 1,
+      title: "お正月",
+      timeLabel: "毎年1月1日〜3日",
+      description: "",
+      color: "red",
+      updatedAt: "2026-04-24T10:20",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-new-year-day-2",
+      type: "yearly-interval",
+      startDate: "2027-01-02",
+      intervalYears: 1,
+      title: "お正月",
+      timeLabel: "毎年1月1日〜3日",
+      description: "",
+      color: "red",
+      updatedAt: "2026-04-24T10:20",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-new-year-day-3",
+      type: "yearly-interval",
+      startDate: "2027-01-03",
+      intervalYears: 1,
+      title: "お正月",
+      timeLabel: "毎年1月1日〜3日",
+      description: "",
+      color: "red",
+      updatedAt: "2026-04-24T10:20",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-setsubun",
+      type: "seasonal-setsubun",
+      startDate: "2027-02-03",
+      title: "節分",
+      timeLabel: "立春の前日",
+      description: "",
+      color: "default",
+      updatedAt: "2026-04-24T10:20",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-golden-week-day-1",
+      type: "yearly-interval",
+      startDate: "2027-05-03",
+      intervalYears: 1,
+      title: "ゴールデンウィーク",
+      timeLabel: "毎年5月3日〜5日",
+      description: "",
+      color: "green",
+      updatedAt: "2026-04-24T10:20",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-golden-week-day-2",
+      type: "yearly-interval",
+      startDate: "2027-05-04",
+      intervalYears: 1,
+      title: "ゴールデンウィーク",
+      timeLabel: "毎年5月3日〜5日",
+      description: "",
+      color: "green",
+      updatedAt: "2026-04-24T10:20",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-golden-week-day-3",
+      type: "yearly-interval",
+      startDate: "2027-05-05",
+      intervalYears: 1,
+      title: "ゴールデンウィーク",
+      timeLabel: "毎年5月3日〜5日",
+      description: "",
+      color: "green",
+      updatedAt: "2026-04-24T10:20",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-obon-day-1",
+      type: "yearly-interval",
+      startDate: "2026-08-13",
+      intervalYears: 1,
+      title: "お盆",
+      timeLabel: "毎年8月13日〜16日",
+      description: "",
+      color: "blue",
+      updatedAt: "2026-04-24T10:20",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-obon-day-2",
+      type: "yearly-interval",
+      startDate: "2026-08-14",
+      intervalYears: 1,
+      title: "お盆",
+      timeLabel: "毎年8月13日〜16日",
+      description: "",
+      color: "blue",
+      updatedAt: "2026-04-24T10:20",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-obon-day-3",
+      type: "yearly-interval",
+      startDate: "2026-08-15",
+      intervalYears: 1,
+      title: "お盆",
+      timeLabel: "毎年8月13日〜16日",
+      description: "",
+      color: "blue",
+      updatedAt: "2026-04-24T10:20",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-obon-day-4",
+      type: "yearly-interval",
+      startDate: "2026-08-16",
+      intervalYears: 1,
+      title: "お盆",
+      timeLabel: "毎年8月13日〜16日",
+      description: "",
+      color: "blue",
+      updatedAt: "2026-04-24T10:20",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-respect-for-aged-day",
+      type: "annual-nth-weekday",
+      month: 9,
+      weekday: 1,
+      nth: 3,
+      startDate: "2027-09-01",
+      title: "敬老の日",
+      timeLabel: "9月第3月曜",
+      description: "",
+      color: "green",
+      updatedAt: "2026-04-24T10:20",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-labor-thanksgiving-day",
+      type: "yearly-interval",
+      startDate: "2027-11-23",
+      intervalYears: 1,
+      title: "勤労感謝の日",
+      timeLabel: "毎年11月23日",
+      description: "",
+      color: "default",
+      updatedAt: "2026-04-24T10:20",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-meat-day",
+      type: "monthly-day",
+      day: 29,
+      startDate: "2026-04-01",
+      title: "肉の日",
+      timeLabel: "毎月29日",
+      description: "",
+      color: "red",
+      updatedAt: "2026-04-21T09:00",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-thirty-one-day",
+      type: "monthly-day",
+      day: 31,
+      startDate: "2026-04-01",
+      title: "サーティーワンの日",
+      timeLabel: "毎月31日",
+      description: "",
+      color: "blue",
+      updatedAt: "2026-04-21T09:00",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-son-birthday",
+      type: "yearly-interval",
+      startDate: "2026-04-29",
+      intervalYears: 1,
+      title: "息子の誕生日",
+      timeLabel: "毎年4月29日",
+      description: "",
+      color: "blue",
+      updatedAt: "2026-04-26T09:00",
+      includeInUnread: false,
+      editable: true,
+      baseYear: 2019,
+      titleFormat: "%s（%d歳）",
+    },
+    {
+      id: "recurring-dating-anniversary",
+      type: "yearly-interval",
+      startDate: "2026-06-16",
+      intervalYears: 1,
+      title: "付き合った記念日",
+      timeLabel: "毎年6月16日",
+      description: "",
+      color: "red",
+      updatedAt: "2026-04-26T09:00",
+      includeInUnread: false,
+      editable: true,
+      baseYear: 2018,
+      titleFormat: "%s（%d年記念日）",
+    },
+    {
+      id: "recurring-wedding-anniversary",
+      type: "yearly-interval",
+      startDate: "2026-08-26",
+      intervalYears: 1,
+      title: "結婚記念日",
+      timeLabel: "毎年8月26日",
+      description: "",
+      color: "red",
+      updatedAt: "2026-04-26T09:00",
+      includeInUnread: false,
+      editable: true,
+      baseYear: 2018,
+      titleFormat: "%s（%d年記念日）",
+    },
+    {
+      id: "recurring-father-birthday",
+      type: "yearly-interval",
+      startDate: "2026-09-20",
+      intervalYears: 1,
+      title: "お父さんの誕生日",
+      timeLabel: "毎年9月20日",
+      description: "",
+      color: "blue",
+      updatedAt: "2026-04-26T09:00",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-brother-birthday",
+      type: "yearly-interval",
+      startDate: "2026-11-08",
+      intervalYears: 1,
+      title: "弟の誕生日",
+      timeLabel: "毎年11月8日",
+      description: "",
+      color: "blue",
+      updatedAt: "2026-04-26T09:00",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-seiha-dance",
+      type: "weekly",
+      weekday: 4,
+      startDate: "2026-04-01",
+      title: "セイハダンス",
+      timeLabel: "17:30〜",
+      start: "17:30",
+      end: "18:30",
+      description: "京セラドーム イオン",
+      color: "default",
+      updatedAt: "2026-04-27T10:00",
+      includeInUnread: false,
+      editable: true,
+    },
+    {
+      id: "recurring-swimming",
+      type: "weekly",
+      weekday: 0,
+      startDate: "2026-04-01",
+      title: "スイミング",
+      timeLabel: "12:10〜",
+      start: "12:10",
+      end: "13:10",
+      description: "大阪市立浪速屋内プール",
+      color: "default",
+      updatedAt: "2026-04-27T10:00",
+      includeInUnread: false,
+      editable: true,
+    },
+  ],
+};
+
+const SCHOOL_SCHEDULE_UPDATED_AT = "2026-04-10T09:30";
+const schoolScheduleSeed = [
+  ["2026-04-13", "避難訓練"],
+  ["2026-04-14", "対面式／職員学級写真"],
+  ["2026-04-15", "避難訓練予備日／発育測定・聴力①"],
+  ["2026-04-17", "発育測定・聴力①"],
+  ["2026-04-19", "春祭り（地域・PTA）"],
+  ["2026-04-20", "委"],
+  ["2026-04-23", "耳鼻科検診①", "9:00〜"],
+  ["2026-04-27", "委"],
+  ["2026-04-28", "学習参観・懇談会"],
+  ["2026-04-29", "昭和の日"],
+  ["2026-04-30", "住居確認週間"],
+  ["2026-05-01", "住居確認週間"],
+  ["2026-05-03", "憲法記念日"],
+  ["2026-05-04", "みどりの日"],
+  ["2026-05-05", "こどもの日"],
+  ["2026-05-06", "振替休日"],
+  ["2026-05-08", "住居確認週間"],
+  ["2026-05-11", "住居確認週間／いじめ、いのちについて考える"],
+  ["2026-05-13", "心臓検診①＋対象者", "9:00〜"],
+  ["2026-05-18", "ク／視力①"],
+  ["2026-05-20", "読み聞かせ①／視力①／PTA予算総会（講堂15:30〜）"],
+  ["2026-05-21", "尿検査"],
+  ["2026-05-22", "尿検査"],
+  ["2026-05-25", "ク"],
+  ["2026-05-28", "内科①", "13:30〜"],
+  ["2026-05-29", "（ハグ）"],
+  ["2026-06-01", "委"],
+  ["2026-06-02", "眼科①", "14:00"],
+  ["2026-06-07", "日曜参観・引渡し訓練"],
+  ["2026-06-08", "代休"],
+  ["2026-06-10", "尿検査2次／心臓検診2次／救急救命講習"],
+  ["2026-06-12", "わくフェス1〜4h"],
+  ["2026-06-15", "ク"],
+  ["2026-06-16", "プール開き"],
+  ["2026-06-22", "ク"],
+  ["2026-06-24", "地域子ども会・集団下校"],
+  ["2026-06-26", "日吉幼小PTA互礼会"],
+  ["2026-06-29", "委"],
+  ["2026-07-01", "プール清掃・換水"],
+  ["2026-07-06", "懇談会／作品展"],
+  ["2026-07-07", "懇談会／作品展"],
+  ["2026-07-08", "懇談会／作品展"],
+  ["2026-07-09", "懇談会／作品展"],
+  ["2026-07-10", "懇談会／作品展"],
+  ["2026-07-16", "終業式／給食終了"],
+  ["2026-07-20", "海の日"],
+  ["2026-07-21", "西区人権教育講演会"],
+  ["2026-07-28", "水泳記録会"],
+  ["2026-07-31", "日吉盆踊り"],
+  ["2026-08-01", "日吉盆踊り"],
+  ["2026-08-10", "学校休業日"],
+  ["2026-08-11", "山の日"],
+  ["2026-08-12", "学校休業日"],
+  ["2026-08-13", "学校休業日"],
+  ["2026-08-14", "学校休業日"],
+  ["2026-08-26", "始業式・給食開始／修学旅行説明動画開始"],
+  ["2026-08-27", "双方向通信テスト（4時間授業）"],
+  ["2026-08-28", "給食開始／双方向通信テスト（4時間授業）"],
+  ["2026-08-31", "委／学校保健委員会"],
+  ["2026-09-03", "幼小合同避難訓練"],
+  ["2026-09-07", "ク／発育測定①"],
+  ["2026-09-08", "発育測定①"],
+  ["2026-09-09", "運営に関する計画部会"],
+  ["2026-09-10", "幼小合同避難訓練予備日"],
+  ["2026-09-14", "ク"],
+  ["2026-09-16", "読み聞かせ①"],
+  ["2026-09-21", "敬老の日"],
+  ["2026-09-22", "国民の休日"],
+  ["2026-09-23", "秋分の日"],
+  ["2026-09-28", "委"],
+  ["2026-09-29", "運営に関する計画全体会"],
+  ["2026-10-05", "ク"],
+  ["2026-10-10", "千代崎ワクワクフェス"],
+  ["2026-10-11", "日吉連合運動会"],
+  ["2026-10-12", "スポーツの日"],
+  ["2026-10-17", "運動会"],
+  ["2026-10-18", "運動会予備日"],
+  ["2026-10-19", "代休"],
+  ["2026-10-26", "ク"],
+  ["2026-10-27", "学校説明会"],
+  ["2026-10-29", "就学時検診", "14:00〜"],
+  ["2026-11-01", "区民まつり"],
+  ["2026-11-03", "文化の日"],
+  ["2026-11-09", "委"],
+  ["2026-11-10", "総研分科会 I"],
+  ["2026-11-14", "防災訓練？"],
+  ["2026-11-15", "防災訓練？"],
+  ["2026-11-16", "ク"],
+  ["2026-11-18", "西区人権教育実践交流会"],
+  ["2026-11-20", "学習参観"],
+  ["2026-11-23", "勤労感謝の日"],
+  ["2026-11-25", "スポーツ交歓会（仮）"],
+  ["2026-11-26", "スポーツ交歓会（仮）"],
+  ["2026-11-30", "委／音楽鑑賞事前授業"],
+  ["2026-12-04", "堀中クラブ見学"],
+  ["2026-12-07", "ク"],
+  ["2026-12-08", "たこあげ"],
+  ["2026-12-09", "地域子ども会（集団下校）"],
+  ["2026-12-14", "懇談会"],
+  ["2026-12-15", "懇談会"],
+  ["2026-12-16", "懇談会"],
+  ["2026-12-17", "懇談会"],
+  ["2026-12-18", "懇談会"],
+  ["2026-12-20", "日吉連合もちつき"],
+  ["2026-12-23", "給食終了／終業式"],
+  ["2026-12-24", "冬季休業開始"],
+  ["2026-12-25", "学校閉庁日"],
+  ["2026-12-28", "年末休業"],
+  ["2026-12-29", "年末休業"],
+  ["2026-12-30", "年末休業"],
+  ["2026-12-31", "年末休業"],
+  ["2027-01-01", "元日"],
+  ["2027-01-04", "学校閉庁日"],
+  ["2027-01-05", "学校閉庁日"],
+  ["2027-01-11", "成人の日"],
+  ["2027-01-12", "始業式・給食開始"],
+  ["2027-01-15", "総研全体会"],
+  ["2027-01-18", "委"],
+  ["2027-01-25", "ク"],
+  ["2027-01-29", "入学説明資料配布・物品販売"],
+  ["2027-02-01", "委"],
+  ["2027-02-05", "総研分科会 II"],
+  ["2027-02-08", "ク"],
+  ["2027-02-11", "建国記念の日"],
+  ["2027-02-15", "ク"],
+  ["2027-02-19", "学習参観"],
+  ["2027-02-23", "天皇誕生日"],
+  ["2027-03-01", "委"],
+  ["2027-03-03", "地域子ども会（集団下校）"],
+  ["2027-03-04", "卒業を祝う会"],
+  ["2027-03-17", "卒業式"],
+  ["2027-03-19", "春分の日"],
+  ["2027-03-23", "終業式"],
+  ["2027-03-24", "春季休業開始"],
+];
+const schoolScheduleCounters = Object.create(null);
+window.APP_DATA.schedules.push(
+  ...schoolScheduleSeed.map(([date, title, timeLabel = "", description = ""]) => {
+    const nextCount = (schoolScheduleCounters[date] || 0) + 1;
+    schoolScheduleCounters[date] = nextCount;
+    const schedule = {
+      id: `schedule-${date}-school-${nextCount}`,
+      date,
+      title,
+      description,
+      updatedAt: SCHOOL_SCHEDULE_UPDATED_AT,
+    };
+
+    if (timeLabel) {
+      schedule.timeLabel = timeLabel;
+    }
+
+    return schedule;
+  })
+);
+    </script>
+    <script>
+const STORAGE_KEY_READ_NOTICES = "wife-tool-read-notices-v1";
+const STORAGE_KEY_READ_SCHEDULES = "wife-tool-read-schedules-v1";
+const STORAGE_KEY_PINNED_NOTICES = "wife-tool-pinned-notices-v1";
+const STORAGE_KEY_AUTH_GRANTED = "wife-tool-auth-granted-v1";
+const STORAGE_KEY_NOTICE_AUTH_GRANTED = "wife-tool-notice-auth-granted-v1";
+const STORAGE_KEY_SCHEDULE_OVERRIDES = "wife-tool-schedule-overrides-v1";
+const STORAGE_KEY_DELETED_SCHEDULES = "wife-tool-deleted-schedules-v1";
+const STORAGE_KEY_RECURRING_RULE_OVERRIDES = "wife-tool-recurring-rule-overrides-v1";
+const STORAGE_KEY_DELETED_RECURRING_RULES = "wife-tool-deleted-recurring-rules-v1";
+const AUTH_PASSWORD = "0429";
+const NOTICE_AUTH_PASSWORD = "1213";
+const MIN_CALENDAR_MONTH = new Date(2026, 3, 1);
+const SCHEDULE_COLOR_ORDER = ["default", "red", "green", "blue"];
+const SCHEDULE_COLOR_LABELS = {
+  default: "標準",
+  red: "赤",
+  green: "緑",
+  blue: "青",
+};
+
+const appData = window.APP_DATA;
+const PANEL_TITLES = {
+  home: appData.meta.appTitle,
+  notices: "連絡事項",
+  calendar: "月間予定",
+};
+const SEASONAL_DATE_CACHE = {
+  setsubun: new Map(),
+};
+
+const refs = {
+  appShell: document.getElementById("appShell"),
+  appTitle: document.getElementById("appTitle"),
+  lastUpdated: document.getElementById("lastUpdated"),
+  unreadCount: document.getElementById("unreadCount"),
+  unreadBreakdown: document.getElementById("unreadBreakdown"),
+  unreadSummaryButton: document.getElementById("unreadSummaryButton"),
+  topicCards: document.getElementById("topicCards"),
+  pinnedNoticeSection: document.getElementById("pinnedNoticeSection"),
+  noticeBoard: document.getElementById("noticeBoard"),
+  noticeSearch: document.getElementById("noticeSearch"),
+  noticeMonths: document.getElementById("noticeMonths"),
+  noticeSourceButtons: [...document.querySelectorAll("[data-notice-source]")],
+  noticeSourceCountNodes: [...document.querySelectorAll("[data-source-count]")],
+  calendarViewButtons: [...document.querySelectorAll("[data-calendar-view]")],
+  calendarModeLabel: document.getElementById("calendarModeLabel"),
+  calendarMonthLabel: document.getElementById("calendarMonthLabel"),
+  calendarMonthView: document.getElementById("calendarMonthView"),
+  calendarWeekView: document.getElementById("calendarWeekView"),
+  calendarGrid: document.getElementById("calendarGrid"),
+  calendarWeekStrip: document.getElementById("calendarWeekStrip"),
+  calendarWeekDateLabel: document.getElementById("calendarWeekDateLabel"),
+  calendarWeekCount: document.getElementById("calendarWeekCount"),
+  calendarWeekTimeline: document.getElementById("calendarWeekTimeline"),
+  calendarShell: document.getElementById("calendarShell"),
+  prevMonthButton: document.querySelector('[data-month-nav="prev"]'),
+  nextMonthButton: document.querySelector('[data-month-nav="next"]'),
+  panels: [...document.querySelectorAll("[data-panel]")],
+  navButtons: [...document.querySelectorAll(".nav-button")],
+  homeAlbumButton: document.getElementById("homeAlbumButton"),
+  modalRoot: document.getElementById("modalRoot"),
+  modalCard: document.querySelector(".modal-card"),
+  modalKicker: document.getElementById("modalKicker"),
+  modalTitle: document.getElementById("modalTitle"),
+  modalMeta: document.getElementById("modalMeta"),
+  modalBody: document.getElementById("modalBody"),
+  modalActions: document.getElementById("modalActions"),
+  authGate: document.getElementById("authGate"),
+  authSlots: [...document.querySelectorAll("[data-auth-slot]")],
+  authError: document.getElementById("authError"),
+};
+
+const state = {
+  activePanel: "calendar",
+  noticeQuery: "",
+  activeNoticeSource: "papa",
+  readNoticeIds: loadReadNoticeIds(),
+  readScheduleIds: loadReadScheduleIds(),
+  pinnedNoticeIds: loadPinnedNoticeIds(),
+  scheduleOverrides: loadScheduleOverrides(),
+  deletedScheduleIds: loadDeletedScheduleIds(),
+  recurringRuleOverrides: loadRecurringRuleOverrides(),
+  deletedRecurringRuleIds: loadDeletedRecurringRuleIds(),
+  openNoticeMonths: new Set(),
+  currentMonth: clampMonth(getStartOfMonth(getInitialCalendarDate())),
+  selectedDate: toDateKey(getInitialCalendarDate()),
+  calendarView: "month",
+  authInput: "",
+  isAuthenticated: hasGrantedAuth(),
+  isNoticeAuthenticated: hasGrantedNoticeAuth(),
+  hasOpenedInitialScheduleDetail: false,
+  touch: {
+    startX: 0,
+    startY: 0,
+  },
+};
+
+init();
+
+function init() {
+  state.openNoticeMonths = createInitialOpenMonths();
+
+  bindEvents();
+  attachPressFeedback();
+  render();
+  syncAuthGate();
+  openInitialScheduleDetail();
+}
+
+function bindEvents() {
+  document.addEventListener("click", handleDocumentClick);
+
+  refs.noticeSearch.addEventListener("input", (event) => {
+    state.noticeQuery = event.target.value.trim();
+    expandVisibleNoticeMonths();
+    renderNotices();
+  });
+
+  refs.homeAlbumButton.addEventListener("click", openAlbum);
+  refs.unreadSummaryButton.addEventListener("click", openUnreadSummary);
+
+  refs.calendarShell.addEventListener("touchstart", handleCalendarTouchStart, {
+    passive: true,
+  });
+  refs.calendarShell.addEventListener("touchend", handleCalendarTouchEnd, {
+    passive: true,
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !refs.modalRoot.hidden) {
+      closeModal();
+    }
+  });
+}
+
+function handleDocumentClick(event) {
+  const target = getEventElement(event);
+  if (!target) {
+    return;
+  }
+
+  const authDigit = target.closest("[data-auth-digit]");
+  if (authDigit) {
+    appendAuthDigit(authDigit.dataset.authDigit);
+    return;
+  }
+
+  if (target.closest("[data-auth-clear]")) {
+    clearAuthInput();
+    return;
+  }
+
+  if (target.closest("[data-auth-delete]")) {
+    removeAuthDigit();
+    return;
+  }
+
+  const sourceTab = target.closest("[data-notice-source]");
+  if (sourceTab) {
+    setActiveNoticeSource(sourceTab.dataset.noticeSource);
+    return;
+  }
+
+  const calendarViewButton = target.closest("[data-calendar-view]");
+  if (calendarViewButton) {
+    setCalendarView(calendarViewButton.dataset.calendarView);
+    return;
+  }
+
+  const panelButton = target.closest("[data-open-panel]");
+  if (panelButton) {
+    setActivePanel(panelButton.dataset.openPanel);
+    return;
+  }
+
+  const pinButton = target.closest("[data-pin-notice-id]");
+  if (pinButton) {
+    togglePinnedNotice(pinButton.dataset.pinNoticeId);
+    return;
+  }
+
+  const noticeButton = target.closest("[data-notice-id]");
+  if (noticeButton) {
+    openNoticeDetail(noticeButton.dataset.noticeId);
+    return;
+  }
+
+  const monthToggle = target.closest("[data-month-toggle]");
+  if (monthToggle) {
+    toggleMonth(monthToggle.dataset.monthToggle);
+    return;
+  }
+
+  const monthNav = target.closest("[data-month-nav]");
+  if (monthNav) {
+    navigateMonth(monthNav.dataset.monthNav);
+    return;
+  }
+
+  const weekDateButton = target.closest("[data-week-select-date]");
+  if (weekDateButton) {
+    selectWeekDate(weekDateButton.dataset.weekSelectDate);
+    return;
+  }
+
+  const dateButton = target.closest("[data-date]");
+  if (dateButton) {
+    openScheduleDetail(dateButton.dataset.date);
+    return;
+  }
+
+  if (target.closest("[data-close-modal]")) {
+    closeModal();
+  }
+}
+
+function attachPressFeedback() {
+  document.addEventListener(
+    "pointerdown",
+    (event) => {
+      const eventElement = getEventElement(event);
+      if (!eventElement) {
+        return;
+      }
+
+      const target = eventElement.closest(".pressable");
+      if (!target) {
+        return;
+      }
+
+      const rect = target.getBoundingClientRect();
+      target.style.setProperty("--press-x", `${event.clientX - rect.left}px`);
+      target.style.setProperty("--press-y", `${event.clientY - rect.top}px`);
+      target.classList.add("is-held", "is-tap-flash");
+
+      window.setTimeout(() => {
+        target.classList.remove("is-tap-flash");
+      }, 220);
+
+      const clear = () => {
+        target.classList.remove("is-held");
+        window.removeEventListener("pointerup", clear);
+        window.removeEventListener("pointercancel", clear);
+        window.removeEventListener("pointerleave", clear);
+      };
+
+      window.addEventListener("pointerup", clear, { once: true });
+      window.addEventListener("pointercancel", clear, { once: true });
+      window.addEventListener("pointerleave", clear, { once: true });
+    },
+    { passive: true }
+  );
+}
+
+function getEventElement(event) {
+  const target = event.target;
+  if (target instanceof Element) {
+    return target;
+  }
+
+  if (target && target.parentElement instanceof Element) {
+    return target.parentElement;
+  }
+
+  return null;
+}
+
+function render() {
+  renderHeader();
+  renderStatus();
+  renderPanels();
+  renderNotices();
+  renderCalendar();
+  syncPanelVisibility();
+}
+
+function renderHeader() {
+  const panelTitle = PANEL_TITLES[state.activePanel] || appData.meta.appTitle;
+  refs.appTitle.textContent = panelTitle;
+  document.title =
+    state.activePanel === "home"
+      ? panelTitle
+      : `${panelTitle} | ${appData.meta.appTitle}`;
+
+  if (state.activePanel === "home") {
+    refs.lastUpdated.hidden = false;
+    refs.lastUpdated.textContent = `最終更新 ${formatDateTime(getLastUpdatedAt())}`;
+    return;
+  }
+
+  refs.lastUpdated.hidden = true;
+  refs.lastUpdated.textContent = "";
+}
+
+function renderStatus() {
+  const unreadNotices = getUnreadNotices();
+  const unreadSchedules = getUnreadSchedules();
+  const unreadTotal = unreadNotices.length + unreadSchedules.length;
+  refs.unreadCount.textContent = `${unreadTotal}件`;
+  refs.unreadBreakdown.textContent = `お知らせ ${unreadNotices.length}件 / 予定 ${unreadSchedules.length}件`;
+  refs.unreadSummaryButton.classList.toggle("status-pill--alert", unreadTotal > 0);
+  refs.unreadCount.classList.toggle("status-pill__value--alert", unreadTotal > 0);
+}
+
+function renderPanels() {
+  renderHomeTopicCards();
+  renderPinnedNotices();
+  syncNavButtons();
+}
+
+function renderHomeTopicCards() {
+  const today = new Date();
+  const tomorrow = addDays(today, 1);
+  const cards = [
+    {
+      tone: "today",
+      label: "本日",
+      date: toDateKey(today),
+      summary: getSchedulesForDate(toDateKey(today)),
+    },
+    {
+      tone: "tomorrow",
+      label: "翌日",
+      date: toDateKey(tomorrow),
+      summary: getSchedulesForDate(toDateKey(tomorrow)),
+    },
+  ];
+
+  refs.topicCards.innerHTML = "";
+
+  cards.forEach((card) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `topic-card topic-card--${card.tone} pressable`;
+    button.dataset.date = card.date;
+
+    const firstText =
+      card.summary.length > 0
+        ? formatScheduleSummaryLine(card.summary[0])
+        : "空きのある日です";
+
+    button.innerHTML = `
+      <span class="topic-card__label">${card.label}</span>
+      <h3 class="topic-card__title">${formatDateHeadline(card.date)}</h3>
+      <p class="topic-card__summary">${firstText}</p>
+    `;
+
+    refs.topicCards.appendChild(button);
+  });
+}
+
+function renderPinnedNotices() {
+  const pinnedNotices = getPinnedNotices();
+
+  if (pinnedNotices.length === 0) {
+    refs.pinnedNoticeSection.innerHTML = `
+      <div class="section-head">
+        <h2 class="section-title">留めたお知らせ</h2>
+      </div>
+      <div class="pinned-empty-state" aria-hidden="true"></div>
+    `;
+    return;
+  }
+
+  const cardsMarkup = pinnedNotices
+    .map((notice) => {
+      const isUnread = !state.readNoticeIds.has(notice.id);
+      const sourceMeta = getNoticeSourceMeta(getNoticeSource(notice));
+      return `
+        <button type="button" class="notice-card pressable" data-notice-id="${notice.id}">
+          <div class="notice-card__row">
+            <div class="notice-card__meta-group">
+              ${createSourceBadgeMarkup(sourceMeta)}
+              <span class="notice-card__meta">${formatDateTime(notice.publishedAt)}</span>
+            </div>
+            <span class="notice-card__status ${getNoticeStatusClass(notice, isUnread)}">
+              ${getNoticeStatusLabel(notice, isUnread)}
+            </span>
+          </div>
+          <h3 class="notice-card__title">${escapeHtml(notice.title)}</h3>
+          <p class="notice-card__snippet">${escapeHtml(getSnippet(notice.body, 94))}</p>
+        </button>
+      `;
+    })
+    .join("");
+
+  refs.pinnedNoticeSection.innerHTML = `
+    <div class="section-head">
+      <div>
+        <h2 class="section-title">留めたお知らせ</h2>
+      </div>
+      <button
+        type="button"
+        class="ghost-button ghost-button--compact pressable"
+        data-open-panel="notices"
+      >
+        お知らせへ
+      </button>
+    </div>
+    <div class="pinned-notice-list">
+      ${cardsMarkup}
+    </div>
+  `;
+}
+
+function renderNotices() {
+  renderNoticeSourceTabs();
+
+  const visibleGroups = getVisibleNoticeGroups();
+  refs.noticeMonths.innerHTML = "";
+
+  if (visibleGroups.length === 0) {
+    refs.noticeMonths.appendChild(createEmptyCard("該当するお知らせがありません", ""));
+    return;
+  }
+
+  visibleGroups.forEach((group) => {
+    const article = document.createElement("article");
+    article.className = "notice-month";
+
+    const isOpen = state.openNoticeMonths.has(group.key);
+
+    const cardsMarkup = group.notices
+      .map((notice) => {
+        const isUnread = !state.readNoticeIds.has(notice.id);
+        const previewText = getNoticePreviewText(
+          notice.body,
+          state.noticeQuery,
+          96
+        );
+        const sourceMeta = getNoticeSourceMeta(getNoticeSource(notice));
+        const isPinned = state.pinnedNoticeIds.includes(notice.id);
+        return `
+          <article class="notice-list-card">
+            <button
+              type="button"
+              class="notice-list-card__open pressable"
+              data-notice-id="${notice.id}"
+            >
+              <span class="notice-list-card__dot ${
+                isUnread ? "notice-list-card__dot--unread" : "notice-list-card__dot--read"
+              }" aria-hidden="true"></span>
+              <div class="notice-list-card__body">
+                <div class="notice-list-card__meta">
+                  <span class="notice-card__meta">${formatDateTime(notice.publishedAt)}</span>
+                  ${createSourceBadgeMarkup(sourceMeta)}
+                  <span class="notice-card__status ${getNoticeStatusClass(
+                    notice,
+                    isUnread
+                  )}">
+                    ${getNoticeStatusLabel(notice, isUnread)}
+                  </span>
+                </div>
+                <h3 class="notice-list-card__title">${highlightText(
+                  notice.title,
+                  state.noticeQuery
+                )}</h3>
+                <p class="notice-list-card__snippet">${highlightText(
+                  previewText,
+                  state.noticeQuery
+                )}</p>
+              </div>
+              <span class="notice-list-card__avatar notice-list-card__avatar--${
+                sourceMeta.key
+              }">${sourceMeta.avatar}</span>
+            </button>
+            <button
+              type="button"
+              class="pin-button pressable ${isPinned ? "pin-button--active" : ""}"
+              data-pin-notice-id="${notice.id}"
+              aria-pressed="${String(isPinned)}"
+              aria-label="${isPinned ? "ピン留めを外す" : "ピン留めする"}"
+              title="${isPinned ? "ピン留めを外す" : "ピン留めする"}"
+            >
+              📌
+            </button>
+          </article>
+        `;
+      })
+      .join("");
+
+    article.innerHTML = `
+      <button
+        type="button"
+        class="month-header pressable"
+        data-month-toggle="${group.key}"
+        aria-expanded="${String(isOpen)}"
+      >
+        <div>
+          <h3 class="month-header__title">${group.label}</h3>
+          <p class="month-summary">${group.notices.length}件のお知らせ</p>
+        </div>
+        <div>
+          <span class="month-header__count">${isOpen ? "閉じる" : "開く"}</span>
+          <span class="month-header__mark">${isOpen ? "▾" : "▸"}</span>
+        </div>
+      </button>
+      <div class="month-body" ${isOpen ? "" : "hidden"}>
+        ${cardsMarkup}
+      </div>
+    `;
+
+    refs.noticeMonths.appendChild(article);
+  });
+}
+
+function renderNoticeSourceTabs() {
+  if (refs.noticeBoard) {
+    refs.noticeBoard.dataset.sourceTheme = state.activeNoticeSource;
+  }
+
+  refs.noticeSourceButtons.forEach((button) => {
+    const sourceKey = button.dataset.noticeSource;
+    const active = sourceKey === state.activeNoticeSource;
+    button.classList.toggle("notice-source-tab--active", active);
+    button.setAttribute("aria-selected", String(active));
+  });
+
+  refs.noticeSourceCountNodes.forEach((node) => {
+    const sourceKey = node.dataset.sourceCount;
+    node.textContent = `${getNoticeCountBySource(sourceKey)}件`;
+  });
+}
+
+function renderCalendarViewButtons() {
+  refs.calendarViewButtons.forEach((button) => {
+    const active = button.dataset.calendarView === state.calendarView;
+    button.classList.toggle("calendar-view-button--active", active);
+    button.setAttribute("aria-selected", String(active));
+  });
+}
+
+function renderCalendar() {
+  renderCalendarViewButtons();
+
+  if (state.calendarView === "month") {
+    refs.calendarModeLabel.textContent = "月間表示";
+    refs.calendarMonthLabel.textContent = formatMonthHeadline(state.currentMonth);
+    refs.calendarMonthView.hidden = false;
+    refs.calendarWeekView.hidden = true;
+    refs.prevMonthButton.textContent = "前月";
+    refs.nextMonthButton.textContent = "次月";
+    refs.prevMonthButton.setAttribute("aria-label", "前の月へ");
+    refs.nextMonthButton.setAttribute("aria-label", "次の月へ");
+
+    if (refs.prevMonthButton) {
+      refs.prevMonthButton.disabled = isMinCalendarMonth(state.currentMonth);
+    }
+
+    renderMonthCalendar();
+    return;
+  }
+
+  const selectedDateKey = ensureSelectedDate();
+  refs.calendarModeLabel.textContent = "週間表示";
+  refs.calendarMonthLabel.textContent = formatWeekHeadline(selectedDateKey);
+  refs.calendarMonthView.hidden = true;
+  refs.calendarWeekView.hidden = false;
+  refs.prevMonthButton.textContent = "前週";
+  refs.nextMonthButton.textContent = "次週";
+  refs.prevMonthButton.setAttribute("aria-label", "前の週へ");
+  refs.nextMonthButton.setAttribute("aria-label", "次の週へ");
+
+  if (refs.prevMonthButton) {
+    refs.prevMonthButton.disabled = isMinCalendarWeek(selectedDateKey);
+  }
+
+  renderWeekCalendar(selectedDateKey);
+}
+
+function renderMonthCalendar() {
+  refs.calendarGrid.innerHTML = "";
+  const monthDays = buildMonthCalendarCells(state.currentMonth);
+
+  for (let rowStartIndex = 0; rowStartIndex < monthDays.length; rowStartIndex += 7) {
+    const rowCells = monthDays.slice(rowStartIndex, rowStartIndex + 7);
+    const row = document.createElement("div");
+    row.className = "calendar-week-row";
+
+    const cellsWrapper = document.createElement("div");
+    cellsWrapper.className = "calendar-week-row__cells";
+
+    rowCells.forEach((cell) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = [
+        "calendar-cell",
+        "pressable",
+        cell.isOutside ? "calendar-cell--outside" : "",
+        cell.isToday ? "calendar-cell--today" : "",
+        cell.date === state.selectedDate ? "calendar-cell--selected" : "",
+        cell.isSaturday ? "calendar-cell--saturday" : "",
+        cell.isSunday ? "calendar-cell--sunday" : "",
+        cell.events.length > 0 ? "calendar-cell--has-events" : "",
+      ]
+        .filter(Boolean)
+        .join(" ");
+
+      if (cell.isDisabled) {
+        button.disabled = true;
+      } else if (cell.date) {
+        button.dataset.date = cell.date;
+      }
+
+      const rangeMarkup = (cell.rangeSegments || [])
+        .map((segment) => {
+          const shapeClass =
+            segment.isActualStart && segment.isActualEnd
+              ? "calendar-cell__range--single"
+              : segment.isActualStart
+                ? "calendar-cell__range--start"
+                : segment.isActualEnd
+                  ? "calendar-cell__range--end"
+                  : "calendar-cell__range--middle";
+
+          return `<span class="calendar-cell__range ${shapeClass} calendar-cell__range--color-${getScheduleColorTone(
+            segment.schedule
+          )}" style="--range-lane:${segment.lane}" title="${escapeHtml(
+            segment.schedule.title
+          )}">${segment.showLabel ? escapeHtml(segment.schedule.title) : ""}</span>`;
+        })
+        .join("");
+
+      const visibleEvents = cell.visibleEvents || cell.events;
+      const eventMarkup = visibleEvents
+        .slice(0, 3)
+        .map(
+          (schedule) =>
+            `<span class="calendar-cell__chip ${
+              `calendar-cell__chip--color-${getScheduleColorTone(schedule)}`
+            }" title="${escapeHtml(schedule.title)}">${escapeHtml(schedule.title)}</span>`
+        )
+        .join("");
+      const extraMarkup =
+        visibleEvents.length > 3
+          ? `<span class="calendar-cell__more">+${visibleEvents.length - 3}</span>`
+          : "";
+      const garbageMarkup = cell.isGarbageDay
+        ? `<span class="calendar-cell__garbage" title="ゴミの日" aria-label="ゴミの日">🗑️</span>`
+        : "";
+
+      button.innerHTML = `
+        <span class="calendar-cell__day-row">
+          <span class="calendar-cell__day ${
+            cell.isSaturday ? "calendar-cell__day--saturday" : ""
+          } ${cell.isSunday ? "calendar-cell__day--sunday" : ""}">
+            ${cell.dayLabel}
+          </span>
+          ${garbageMarkup}
+        </span>
+        <div class="calendar-cell__ranges" style="--range-lanes:${cell.rangeLaneCount || 0}">${rangeMarkup}</div>
+        <div class="calendar-cell__events">
+          ${eventMarkup}
+          ${extraMarkup}
+        </div>
+      `;
+
+      cellsWrapper.appendChild(button);
+    });
+
+    row.appendChild(cellsWrapper);
+    refs.calendarGrid.appendChild(row);
+  }
+}
+
+function renderWeekCalendar(selectedDateKey) {
+  const weekDates = buildWeekDates(selectedDateKey);
+  refs.calendarWeekStrip.innerHTML = "";
+
+  weekDates.forEach((date) => {
+    const dateKey = toDateKey(date);
+    const schedules = getSchedulesForDate(dateKey);
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = [
+      "calendar-week-chip",
+      "pressable",
+      dateKey === selectedDateKey ? "calendar-week-chip--active" : "",
+      dateKey === toDateKey(new Date()) ? "calendar-week-chip--today" : "",
+      date.getMonth() !== parseDateTime(`${selectedDateKey}T00:00`).getMonth()
+        ? "calendar-week-chip--outside"
+        : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
+
+    if (date < MIN_CALENDAR_MONTH) {
+      button.disabled = true;
+    } else {
+      button.dataset.weekSelectDate = dateKey;
+    }
+
+    button.innerHTML = `
+      <span class="calendar-week-chip__weekday">${formatWeekdayShort(date)}</span>
+      <strong class="calendar-week-chip__day">
+        ${date.getDate()}
+        ${isGarbageCollectionDay(date) ? `<span class="calendar-week-chip__garbage" title="ゴミの日" aria-label="ゴミの日">🗑️</span>` : ""}
+      </strong>
+      <span class="calendar-week-chip__count">${
+        schedules.length > 0 ? `${schedules.length}件` : ""
+      }</span>
+    `;
+
+    refs.calendarWeekStrip.appendChild(button);
+  });
+
+  const schedules = getSchedulesForDate(selectedDateKey);
+  refs.calendarWeekDateLabel.textContent = formatDateHeadline(selectedDateKey);
+  refs.calendarWeekCount.textContent = schedules.length > 0 ? `${schedules.length}件` : "予定なし";
+  renderWeekTimeline(selectedDateKey, schedules);
+}
+
+function renderWeekTimeline(dateKey, schedules) {
+  const timeline = refs.calendarWeekTimeline;
+  const startHour = 6;
+  const endHour = 22;
+  const rowHeight = 54;
+  const totalRows = endHour - startHour;
+  const timedSchedules = schedules.filter(hasScheduleTimeRange);
+  const flexibleSchedules = schedules.filter((schedule) => !hasScheduleTimeRange(schedule));
+
+  timeline.innerHTML = "";
+
+  if (flexibleSchedules.length > 0) {
+    const flexibleList = document.createElement("div");
+    flexibleList.className = "calendar-week-floating";
+
+    flexibleSchedules.forEach((schedule) => {
+      const item = document.createElement("button");
+      item.type = "button";
+      item.className = `calendar-week-floating__item calendar-week-floating__item--tone-${getScheduleColorTone(
+        schedule
+      )} pressable`;
+      item.dataset.date = dateKey;
+      const timeLabel = getScheduleTimeLabel(schedule, "");
+      item.innerHTML = `
+        ${timeLabel ? `<span class="calendar-week-floating__time">${escapeHtml(timeLabel)}</span>` : ""}
+        <strong class="calendar-week-floating__title">${escapeHtml(schedule.title)}</strong>
+      `;
+      flexibleList.appendChild(item);
+    });
+
+    timeline.appendChild(flexibleList);
+  }
+
+  const hours = document.createElement("div");
+  hours.className = "calendar-week-hours";
+
+  for (let hour = startHour; hour < endHour; hour += 1) {
+    const row = document.createElement("div");
+    row.className = "calendar-week-hour";
+    row.innerHTML = `
+      <span class="calendar-week-hour__label">${String(hour).padStart(2, "0")}</span>
+      <div class="calendar-week-hour__line"></div>
+    `;
+    hours.appendChild(row);
+  }
+
+  timeline.appendChild(hours);
+
+  const eventsLayer = document.createElement("div");
+  eventsLayer.className = "calendar-week-events";
+  eventsLayer.style.height = `${totalRows * rowHeight}px`;
+
+  if (timedSchedules.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "calendar-week-empty";
+    empty.textContent =
+      flexibleSchedules.length > 0 ? "時刻指定の予定はありません" : "予定はありません";
+    eventsLayer.appendChild(empty);
+  } else {
+    timedSchedules.forEach((schedule) => {
+      const startMinutes = parseTimeToMinutes(schedule.start);
+      const endMinutes = Math.max(startMinutes + 30, parseTimeToMinutes(schedule.end));
+      const top = Math.max(0, ((startMinutes - startHour * 60) / 60) * rowHeight);
+      const height = Math.max(44, ((endMinutes - startMinutes) / 60) * rowHeight - 8);
+
+      const item = document.createElement("button");
+      item.type = "button";
+      item.className = `calendar-week-event calendar-week-event--tone-${getScheduleColorTone(
+        schedule
+      )} pressable`;
+      item.dataset.date = dateKey;
+      item.style.top = `${top}px`;
+      item.style.height = `${height}px`;
+      item.innerHTML = `
+        <span class="calendar-week-event__time">${getScheduleTimeLabel(schedule)}</span>
+        <strong class="calendar-week-event__title">${escapeHtml(schedule.title)}</strong>
+      `;
+      eventsLayer.appendChild(item);
+    });
+  }
+
+  if (dateKey === toDateKey(new Date())) {
+    const now = new Date();
+    const nowMinutes = now.getHours() * 60 + now.getMinutes();
+    if (nowMinutes >= startHour * 60 && nowMinutes <= endHour * 60) {
+      const nowLine = document.createElement("div");
+      nowLine.className = "calendar-week-now";
+      nowLine.style.top = `${((nowMinutes - startHour * 60) / 60) * rowHeight}px`;
+      eventsLayer.appendChild(nowLine);
+    }
+  }
+
+  timeline.appendChild(eventsLayer);
+}
+
+function syncPanelVisibility() {
+  refs.panels.forEach((panel) => {
+    const active = panel.dataset.panel === state.activePanel;
+    panel.hidden = !active;
+    panel.classList.toggle("panel--active", active);
+  });
+}
+
+function syncNavButtons() {
+  refs.navButtons.forEach((button) => {
+    const active = button.dataset.openPanel === state.activePanel;
+    button.classList.toggle("nav-button--active", active);
+  });
+}
+
+function setActivePanel(panelName) {
+  if (panelName === "notices" && !state.isNoticeAuthenticated) {
+    requestNoticeAccess(() => setActivePanel("notices"));
+    return;
+  }
+
+  state.activePanel = panelName;
+  renderHeader();
+  syncPanelVisibility();
+  syncNavButtons();
+}
+
+function setCalendarView(viewName) {
+  if (!viewName || state.calendarView === viewName) {
+    return;
+  }
+
+  state.calendarView = viewName;
+
+  if (viewName === "week") {
+    const currentMonthKey = `${state.currentMonth.getFullYear()}-${String(
+      state.currentMonth.getMonth() + 1
+    ).padStart(2, "0")}`;
+    const selectedMonthKey = getYearMonthKey(`${ensureSelectedDate()}T00:00`);
+
+    if (selectedMonthKey !== currentMonthKey) {
+      state.selectedDate = toDateKey(state.currentMonth);
+    }
+  } else {
+    state.currentMonth = clampMonth(
+      getStartOfMonth(parseDateTime(`${ensureSelectedDate()}T00:00`))
+    );
+  }
+
+  renderCalendar();
+}
+
+function selectWeekDate(dateKey) {
+  state.selectedDate = dateKey;
+  state.currentMonth = clampMonth(getStartOfMonth(parseDateTime(`${dateKey}T00:00`)));
+  renderCalendar();
+}
+
+function setActiveNoticeSource(sourceKey) {
+  if (state.activeNoticeSource === sourceKey) {
+    return;
+  }
+
+  state.activeNoticeSource = sourceKey;
+  renderNotices();
+}
+
+function syncAuthGate() {
+  refs.authGate.hidden = state.isAuthenticated;
+  refs.appShell.hidden = !state.isAuthenticated;
+  document.body.classList.toggle("auth-locked", !state.isAuthenticated);
+  updateAuthDisplay();
+}
+
+function appendAuthDigit(digit) {
+  if (state.isAuthenticated || state.authInput.length >= 4) {
+    return;
+  }
+
+  state.authInput = `${state.authInput}${digit}`;
+  refs.authError.hidden = true;
+  updateAuthDisplay();
+
+  if (state.authInput.length === 4) {
+    submitAuthInput();
+  }
+}
+
+function removeAuthDigit() {
+  if (state.isAuthenticated || state.authInput.length === 0) {
+    return;
+  }
+
+  state.authInput = state.authInput.slice(0, -1);
+  refs.authError.hidden = true;
+  updateAuthDisplay();
+}
+
+function clearAuthInput() {
+  if (state.isAuthenticated) {
+    return;
+  }
+
+  state.authInput = "";
+  refs.authError.hidden = true;
+  updateAuthDisplay();
+}
+
+function updateAuthDisplay() {
+  refs.authSlots.forEach((slot, index) => {
+    slot.textContent = state.authInput[index] ? "●" : "";
+    slot.classList.toggle("auth-slot--filled", Boolean(state.authInput[index]));
+  });
+}
+
+function submitAuthInput() {
+  if (state.authInput !== AUTH_PASSWORD) {
+    refs.authError.hidden = false;
+    state.authInput = "";
+    updateAuthDisplay();
+    return;
+  }
+
+  state.isAuthenticated = true;
+  saveGrantedAuth();
+  syncAuthGate();
+  openInitialScheduleDetail();
+}
+
+function requestNoticeAccess(onSuccess) {
+  if (state.isNoticeAuthenticated) {
+    if (typeof onSuccess === "function") {
+      onSuccess();
+    }
+    return;
+  }
+
+  openNoticeAuthModal(onSuccess);
+}
+
+function openNoticeAuthModal(onSuccess) {
+  let inputValue = "";
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "auth-card";
+  wrapper.setAttribute("aria-label", "お知らせの認証");
+
+  const title = document.createElement("h3");
+  title.className = "auth-card__title";
+  title.textContent = "お知らせを開くにはパスワードが必要です。";
+
+  const text = document.createElement("p");
+  text.className = "auth-card__text";
+  text.innerHTML = "この確認は初回のみです。<br />認証後は、この端末で続けて確認できます。";
+
+  const display = document.createElement("div");
+  display.className = "auth-display";
+  display.setAttribute("aria-live", "polite");
+
+  const slots = Array.from({ length: 4 }, () => {
+    const slot = document.createElement("span");
+    slot.className = "auth-slot";
+    display.appendChild(slot);
+    return slot;
+  });
+
+  const error = document.createElement("p");
+  error.className = "auth-error";
+  error.hidden = true;
+  error.textContent = "パスワードが違います。";
+
+  const keypad = document.createElement("div");
+  keypad.className = "auth-keypad";
+  keypad.setAttribute("aria-label", "数字キー");
+
+  const updateDisplay = () => {
+    slots.forEach((slot, index) => {
+      slot.textContent = inputValue[index] ? "●" : "";
+      slot.classList.toggle("auth-slot--filled", Boolean(inputValue[index]));
+    });
+  };
+
+  const submit = () => {
+    if (inputValue !== NOTICE_AUTH_PASSWORD) {
+      error.hidden = false;
+      inputValue = "";
+      updateDisplay();
+      return;
+    }
+
+    state.isNoticeAuthenticated = true;
+    saveGrantedNoticeAuth();
+    closeModal();
+
+    if (typeof onSuccess === "function") {
+      onSuccess();
+    }
+  };
+
+  const appendDigit = (digit) => {
+    if (inputValue.length >= 4) {
+      return;
+    }
+
+    inputValue = `${inputValue}${digit}`;
+    error.hidden = true;
+    updateDisplay();
+
+    if (inputValue.length === 4) {
+      submit();
+    }
+  };
+
+  const clearInput = () => {
+    inputValue = "";
+    error.hidden = true;
+    updateDisplay();
+  };
+
+  const removeDigit = () => {
+    if (!inputValue.length) {
+      return;
+    }
+
+    inputValue = inputValue.slice(0, -1);
+    error.hidden = true;
+    updateDisplay();
+  };
+
+  [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "clear",
+    "0",
+    "delete",
+  ].forEach((key) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `auth-key${key === "clear" || key === "delete" ? " auth-key--sub" : ""} pressable`;
+
+    if (key === "clear") {
+      button.textContent = "消去";
+      button.addEventListener("click", clearInput);
+    } else if (key === "delete") {
+      button.textContent = "←";
+      button.addEventListener("click", removeDigit);
+    } else {
+      button.textContent = key;
+      button.addEventListener("click", () => appendDigit(key));
+    }
+
+    keypad.appendChild(button);
+  });
+
+  wrapper.appendChild(title);
+  wrapper.appendChild(text);
+  wrapper.appendChild(display);
+  wrapper.appendChild(error);
+  wrapper.appendChild(keypad);
+  updateDisplay();
+
+  openModal({
+    kicker: "",
+    title: "",
+    meta: "",
+    bodyContent: wrapper,
+    actions: [],
+  });
+}
+
+function openInitialScheduleDetail() {
+  if (!state.isAuthenticated || state.hasOpenedInitialScheduleDetail) {
+    return;
+  }
+
+  state.hasOpenedInitialScheduleDetail = true;
+  const initialDateKey = toDateKey(getInitialCalendarDate());
+  state.activePanel = "calendar";
+  state.calendarView = "month";
+  state.currentMonth = clampMonth(
+    getStartOfMonth(parseDateTime(`${initialDateKey}T00:00`))
+  );
+  state.selectedDate = initialDateKey;
+  render();
+  openScheduleDetail(initialDateKey);
+}
+
+function toggleMonth(monthKey) {
+  if (state.openNoticeMonths.has(monthKey)) {
+    state.openNoticeMonths.delete(monthKey);
+  } else {
+    state.openNoticeMonths.add(monthKey);
+  }
+
+  renderNotices();
+}
+
+function navigateMonth(direction) {
+  if (state.calendarView === "week") {
+    const deltaDays = direction === "prev" ? -7 : 7;
+    const nextDate = addDays(parseDateTime(`${ensureSelectedDate()}T00:00`), deltaDays);
+    const clampedDate = nextDate < MIN_CALENDAR_MONTH ? new Date(MIN_CALENDAR_MONTH) : nextDate;
+    state.selectedDate = toDateKey(clampedDate);
+    state.currentMonth = clampMonth(getStartOfMonth(clampedDate));
+    renderCalendar();
+    return;
+  }
+
+  const delta = direction === "prev" ? -1 : 1;
+  const nextMonth = new Date(
+    state.currentMonth.getFullYear(),
+    state.currentMonth.getMonth() + delta,
+    1
+  );
+  state.currentMonth = clampMonth(nextMonth);
+
+  if (direction === "prev" && isMinCalendarMonth(state.currentMonth)) {
+    state.currentMonth = MIN_CALENDAR_MONTH;
+  }
+
+  state.selectedDate = null;
+  renderStatus();
+  renderCalendar();
+}
+
+function handleCalendarTouchStart(event) {
+  const touch = event.changedTouches[0];
+  state.touch.startX = touch.clientX;
+  state.touch.startY = touch.clientY;
+}
+
+function handleCalendarTouchEnd(event) {
+  const touch = event.changedTouches[0];
+  const deltaX = touch.clientX - state.touch.startX;
+  const deltaY = touch.clientY - state.touch.startY;
+
+  if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY)) {
+    return;
+  }
+
+  if (deltaX > 0 && isMinCalendarMonth(state.currentMonth)) {
+    return;
+  }
+
+  navigateMonth(deltaX < 0 ? "next" : "prev");
+}
+
+function openNoticeDetail(noticeId, options = {}) {
+  if (!state.isNoticeAuthenticated) {
+    requestNoticeAccess(() => openNoticeDetail(noticeId, options));
+    return;
+  }
+
+  const notice = appData.notices.find((item) => item.id === noticeId);
+  if (!notice) {
+    return;
+  }
+
+  markNoticeAsRead(notice.id);
+  const bodyFragment = document.createDocumentFragment();
+  const detailBody = document.createElement("div");
+  detailBody.className = "notice-detail-body";
+  notice.body.split("\n\n").forEach((paragraph) => {
+    const p = document.createElement("p");
+    p.textContent = paragraph;
+    detailBody.appendChild(p);
+  });
+
+  const attachments = Array.isArray(notice.attachments) ? notice.attachments : [];
+  if (attachments.length > 0) {
+    const attachmentList = document.createElement("div");
+    attachmentList.className = "notice-attachments";
+
+    attachments.forEach((attachment) => {
+      const link = document.createElement("a");
+      link.className = "notice-attachment pressable";
+      link.href = attachment.href;
+      link.download = attachment.download || attachment.label || "";
+      link.rel = "noopener";
+      link.innerHTML = `
+        <span class="notice-attachment__name">${escapeHtml(attachment.label)}</span>
+        <span class="notice-attachment__type">${escapeHtml(
+          attachment.type || "添付"
+        )}</span>
+      `;
+      attachmentList.appendChild(link);
+    });
+
+    detailBody.appendChild(attachmentList);
+  }
+
+  bodyFragment.appendChild(detailBody);
+
+  openModal({
+    kicker: "",
+    title: notice.title,
+    meta: `${formatDateTime(notice.publishedAt)} に掲載`,
+    bodyContent: bodyFragment,
+    modalClass: "notice",
+    actions: [
+      {
+        label: options.returnToUnreadSummary ? "未確認一覧に戻る" : "一覧に戻る",
+        onClick: options.returnToUnreadSummary ? openUnreadSummary : closeModal,
+      },
+    ],
+  });
+}
+
+function openScheduleDetail(dateKey, options = {}) {
+  if (options.syncCalendarSelection !== false) {
+    state.selectedDate = dateKey;
+    renderCalendar();
+  }
+
+  const detailOptions = {
+    returnToUnreadSummary: Boolean(options.returnToUnreadSummary),
+    syncCalendarSelection: options.syncCalendarSelection !== false,
+  };
+  const schedules = getSchedulesForDate(dateKey);
+  markSchedulesAsRead(
+    schedules.filter((schedule) => !isRecurringSchedule(schedule)).map((schedule) => schedule.id)
+  );
+  const body = document.createElement("div");
+  body.className = "calendar-event-list";
+
+  if (schedules.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "empty-text";
+    empty.textContent = "この日は予定が入っていません。";
+    body.appendChild(empty);
+  } else {
+    schedules.forEach((schedule) => {
+      const description = getScheduleDescription(schedule);
+      const tone = getScheduleColorTone(schedule);
+      const item = document.createElement("article");
+      item.className = `calendar-event calendar-event--tone-${tone}`;
+      const timeLabel = getScheduleTimeLabel(schedule, "");
+      item.innerHTML = `
+        ${timeLabel ? `<span class="calendar-event__time">${escapeHtml(timeLabel)}</span>` : ""}
+        <h4 class="calendar-event__title">${escapeHtml(schedule.title)}</h4>
+      `;
+
+      const descriptionNode = createScheduleDescriptionContent(description);
+      if (descriptionNode) {
+        item.appendChild(descriptionNode);
+      }
+
+      if (schedule.editable !== false) {
+        const actions = document.createElement("div");
+        actions.className = "calendar-event__actions";
+
+        const colorButton = document.createElement("button");
+        colorButton.type = "button";
+        colorButton.className = "schedule-action schedule-action--tone pressable";
+        colorButton.textContent = `色: ${getScheduleColorLabel(schedule)}`;
+        colorButton.addEventListener("click", () => {
+          cycleScheduleColor(schedule.id, dateKey, detailOptions);
+        });
+
+        const editButton = document.createElement("button");
+        editButton.type = "button";
+        editButton.className = "schedule-action pressable";
+        editButton.textContent = "編集";
+        editButton.addEventListener("click", () => {
+          openScheduleEditor(schedule.id, dateKey, detailOptions);
+        });
+
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "schedule-action schedule-action--danger pressable";
+        deleteButton.textContent = "消去";
+        deleteButton.addEventListener("click", () => {
+          openScheduleDeleteConfirm(schedule.id, dateKey, detailOptions);
+        });
+
+        actions.appendChild(colorButton);
+        actions.appendChild(editButton);
+        actions.appendChild(deleteButton);
+        item.appendChild(actions);
+      }
+      body.appendChild(item);
+    });
+  }
+
+  openModal({
+    kicker: "",
+    title: formatDateHeadline(dateKey),
+    meta: "",
+    bodyContent: body,
+    actions: options.returnToUnreadSummary
+      ? [
+          {
+            label: "未確認一覧に戻る",
+            onClick: openUnreadSummary,
+          },
+        ]
+      : [],
+  });
+}
+
+function openScheduleEditor(scheduleId, dateKey, options = {}) {
+  const schedule = getScheduleById(scheduleId, dateKey);
+  if (!schedule) {
+    openScheduleDetail(dateKey, options);
+    return;
+  }
+
+  const form = document.createElement("div");
+  form.className = "schedule-edit-form";
+
+  const titleField = document.createElement("label");
+  titleField.className = "schedule-edit-field";
+  titleField.innerHTML = `<span class="field-label">タイトル</span>`;
+
+  const titleInput = document.createElement("input");
+  titleInput.type = "text";
+  titleInput.className = "schedule-edit-input";
+  titleInput.value = schedule.title;
+  titleInput.maxLength = 80;
+  titleField.appendChild(titleInput);
+
+  const memoField = document.createElement("label");
+  memoField.className = "schedule-edit-field";
+  memoField.innerHTML = `<span class="field-label">補足メモ</span>`;
+
+  const memoInput = document.createElement("textarea");
+  memoInput.className = "schedule-edit-textarea";
+  memoInput.rows = 4;
+  memoInput.placeholder = "必要な補足があるときだけ入力";
+  memoInput.value = schedule.description || "";
+  memoField.appendChild(memoInput);
+
+  const error = document.createElement("p");
+  error.className = "schedule-edit-error";
+  error.hidden = true;
+
+  form.appendChild(titleField);
+  form.appendChild(memoField);
+  form.appendChild(error);
+
+  openModal({
+    kicker: "",
+    title: isRecurringSchedule(schedule) ? "繰り返し予定を編集" : "予定を編集",
+    meta: formatDateHeadline(dateKey),
+    bodyContent: form,
+    actions: [
+      {
+        label: "戻る",
+        variant: "ghost",
+        onClick: () => openScheduleDetail(dateKey, options),
+      },
+      {
+        label: "保存",
+        onClick: () => {
+          const nextTitle = titleInput.value.trim();
+          const nextDescription = memoInput.value.trim();
+
+          if (!nextTitle) {
+            error.textContent = "タイトルを入力してください。";
+            error.hidden = false;
+            return;
+          }
+
+          saveSchedulePatch(
+            scheduleId,
+            {
+              title: nextTitle,
+              description: nextDescription,
+            },
+            dateKey
+          );
+          openScheduleDetail(dateKey, options);
+        },
+      },
+    ],
+  });
+}
+
+function openScheduleDeleteConfirm(scheduleId, dateKey, options = {}) {
+  const schedule = getScheduleById(scheduleId, dateKey);
+  if (!schedule) {
+    openScheduleDetail(dateKey, options);
+    return;
+  }
+
+  const body = document.createElement("div");
+  body.className = "schedule-delete-confirm";
+  body.innerHTML = `<p>「${escapeHtml(schedule.title)}」を消去します。</p>`;
+
+  openModal({
+    kicker: "",
+    title: "予定を消去しますか",
+    meta: "",
+    bodyContent: body,
+    actions: [
+      {
+        label: "戻る",
+        variant: "ghost",
+        onClick: () => openScheduleDetail(dateKey, options),
+      },
+      {
+        label: "消去する",
+        onClick: () => {
+          deleteSchedule(scheduleId, dateKey);
+          openScheduleDetail(dateKey, options);
+        },
+      },
+    ],
+  });
+}
+
+function openUnreadSummary() {
+  const unreadNotices = getUnreadNotices();
+  const unreadSchedules = getUnreadSchedules();
+  const wrapper = document.createElement("div");
+  wrapper.className = "unread-summary";
+
+  const noticeSection = createUnreadSection(
+    "未確認のお知らせ",
+    unreadNotices,
+    (notice) => {
+      closeModal();
+      openNoticeDetail(notice.id, { returnToUnreadSummary: true });
+    },
+    (notice) => {
+      const sourceMeta = getNoticeSourceMeta(getNoticeSource(notice));
+      return {
+        meta: `${sourceMeta.label} / ${formatDateTime(notice.publishedAt)}`,
+        title: notice.title,
+        summary: getSnippet(notice.body, 78),
+      };
+    },
+    () => {
+      markNoticeIdsAsRead(unreadNotices.map((notice) => notice.id));
+      openUnreadSummary();
+    }
+  );
+
+  const scheduleSection = createUnreadSection(
+    "未確認の予定",
+    unreadSchedules,
+    (schedule) => {
+      closeModal();
+      openScheduleDetail(schedule.date, {
+        returnToUnreadSummary: true,
+        syncCalendarSelection: false,
+      });
+    },
+    (schedule) => ({
+      meta: formatUnreadScheduleMeta(schedule),
+      title: schedule.title,
+      summary: getSnippet(getScheduleDescription(schedule), 78),
+    }),
+    () => {
+      markSchedulesAsRead(unreadSchedules.map((schedule) => schedule.id));
+      openUnreadSummary();
+    }
+  );
+
+  wrapper.appendChild(noticeSection);
+  wrapper.appendChild(scheduleSection);
+
+  openModal({
+    kicker: "",
+    title: "",
+    meta: "",
+    bodyContent: wrapper,
+    actions: [],
+  });
+}
+
+function openAlbum() {
+  if (!appData.meta.albumUrl) {
+    return;
+  }
+
+  window.open(appData.meta.albumUrl, "_blank", "noopener,noreferrer");
+}
+
+function openModal({ kicker, title, meta, bodyContent, actions, modalClass = "" }) {
+  refs.modalKicker.textContent = kicker;
+  refs.modalTitle.textContent = title;
+  refs.modalMeta.textContent = meta;
+  refs.modalKicker.hidden = !kicker;
+  refs.modalTitle.hidden = !title;
+  refs.modalMeta.hidden = !meta;
+  refs.modalCard.classList.toggle("modal-card--plain", !kicker && !title && !meta);
+  refs.modalCard.classList.toggle("modal-card--notice", modalClass === "notice");
+  refs.modalBody.replaceChildren(bodyContent);
+  refs.modalActions.replaceChildren();
+  refs.modalActions.hidden = actions.length === 0;
+
+  actions.forEach((action) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className =
+      action.variant === "ghost"
+        ? "ghost-button pressable"
+        : "primary-button pressable";
+    button.textContent = action.label;
+    button.addEventListener("click", action.onClick, { once: true });
+    refs.modalActions.appendChild(button);
+  });
+
+  refs.modalRoot.hidden = false;
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal() {
+  refs.modalRoot.hidden = true;
+  refs.modalCard.classList.remove("modal-card--plain");
+  refs.modalCard.classList.remove("modal-card--notice");
+  refs.modalKicker.hidden = false;
+  refs.modalTitle.hidden = false;
+  refs.modalMeta.hidden = false;
+  refs.modalActions.hidden = false;
+  document.body.style.overflow = "";
+}
+
+function markNoticeAsRead(noticeId) {
+  markNoticeIdsAsRead([noticeId]);
+}
+
+function markNoticeIdsAsRead(noticeIds) {
+  let updated = false;
+
+  noticeIds.forEach((noticeId) => {
+    if (!state.readNoticeIds.has(noticeId)) {
+      state.readNoticeIds.add(noticeId);
+      updated = true;
+    }
+  });
+
+  if (!updated) {
+    return;
+  }
+
+  saveReadNoticeIds(state.readNoticeIds);
+  renderStatus();
+  renderPanels();
+  renderNotices();
+}
+
+function markSchedulesAsRead(scheduleIds) {
+  let updated = false;
+
+  scheduleIds.forEach((scheduleId) => {
+    if (!state.readScheduleIds.has(scheduleId)) {
+      state.readScheduleIds.add(scheduleId);
+      updated = true;
+    }
+  });
+
+  if (!updated) {
+    return;
+  }
+
+  saveReadScheduleIds(state.readScheduleIds);
+  renderStatus();
+}
+
+function togglePinnedNotice(noticeId) {
+  if (state.pinnedNoticeIds.includes(noticeId)) {
+    state.pinnedNoticeIds = state.pinnedNoticeIds.filter((id) => id !== noticeId);
+  } else {
+    state.pinnedNoticeIds = [noticeId, ...state.pinnedNoticeIds];
+  }
+
+  savePinnedNoticeIds(state.pinnedNoticeIds);
+  renderPanels();
+  renderNotices();
+}
+
+function getVisibleNoticeGroups() {
+  const notices = getSortedNotices().filter((notice) => {
+    const sourcePass = getNoticeSource(notice) === state.activeNoticeSource;
+    const queryPass =
+      state.noticeQuery.length === 0
+        ? true
+        : normalizeText(`${notice.title} ${notice.body}`).includes(
+            normalizeText(state.noticeQuery)
+          );
+
+    return sourcePass && queryPass;
+  });
+
+  const groups = new Map();
+
+  notices.forEach((notice) => {
+    const monthKey = getYearMonthKey(notice.publishedAt);
+    const key = getNoticeGroupKey(notice);
+    if (!groups.has(key)) {
+      groups.set(key, {
+        key,
+        label: formatMonthFromKey(monthKey),
+        notices: [],
+      });
+    }
+
+    groups.get(key).notices.push(notice);
+  });
+
+  return [...groups.values()];
+}
+
+function expandVisibleNoticeMonths() {
+  getVisibleNoticeGroups().forEach((group) => {
+    state.openNoticeMonths.add(group.key);
+  });
+}
+
+function getUnreadNotices() {
+  return getSortedNotices().filter((notice) => !state.readNoticeIds.has(notice.id));
+}
+
+function getUnreadSchedules() {
+  return [...getAllSchedules()]
+    .filter((schedule) => !state.readScheduleIds.has(schedule.id))
+    .sort(compareSchedules);
+}
+
+function getSortedNotices() {
+  return [...appData.notices].sort(
+    (left, right) => parseDateTime(right.publishedAt) - parseDateTime(left.publishedAt)
+  );
+}
+
+function getPinnedNotices() {
+  return state.pinnedNoticeIds
+    .map((noticeId) => appData.notices.find((notice) => notice.id === noticeId))
+    .filter(Boolean);
+}
+
+function getBaseScheduleById(scheduleId) {
+  return appData.schedules.find((schedule) => schedule.id === scheduleId) || null;
+}
+
+function getBaseRecurringRuleById(ruleId) {
+  return (appData.recurringScheduleRules || []).find((rule) => rule.id === ruleId) || null;
+}
+
+function getAllSchedules() {
+  return appData.schedules
+    .filter((schedule) => !state.deletedScheduleIds.has(schedule.id))
+    .map((schedule) => {
+      const override = state.scheduleOverrides[schedule.id];
+      return override ? { ...schedule, ...override } : schedule;
+    });
+}
+
+function getActiveRecurringRules() {
+  return (appData.recurringScheduleRules || [])
+    .filter((rule) => !state.deletedRecurringRuleIds.has(rule.id))
+    .map((rule) => {
+      const override = state.recurringRuleOverrides[rule.id];
+      return override ? { ...rule, ...override } : rule;
+    });
+}
+
+function getRecurringRuleById(ruleId) {
+  return getActiveRecurringRules().find((rule) => rule.id === ruleId) || null;
+}
+
+function getScheduleById(scheduleId, dateKey = null) {
+  const fixedSchedule =
+    getAllSchedules().find((schedule) => schedule.id === scheduleId) || null;
+  if (fixedSchedule || !dateKey) {
+    return fixedSchedule;
+  }
+
+  return (
+    getRecurringSchedulesForDate(dateKey).find(
+      (schedule) => schedule.id === scheduleId || schedule.recurringRuleId === scheduleId
+    ) || null
+  );
+}
+
+function getSchedulesForDate(dateKey) {
+  return [
+    ...getAllSchedules().filter((schedule) => isScheduleOnDate(schedule, dateKey)),
+    ...getRecurringSchedulesForDate(dateKey),
+  ]
+    .sort(compareSchedules);
+}
+
+function getSchedulesForMonth(monthDate) {
+  const firstDay = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
+  const lastDay = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0);
+  const firstDateKey = toDateKey(firstDay);
+  const lastDateKey = toDateKey(lastDay);
+  const recurringSchedules = [];
+
+  for (let date = new Date(firstDay); date <= lastDay; date = addDays(date, 1)) {
+    recurringSchedules.push(...getRecurringSchedulesForDate(toDateKey(date)));
+  }
+
+  return [
+    ...getAllSchedules().filter((schedule) =>
+      doesScheduleIntersectRange(schedule, firstDateKey, lastDateKey)
+    ),
+    ...recurringSchedules,
+  ].sort(compareSchedules);
+}
+
+function isScheduleOnDate(schedule, dateKey) {
+  if (!schedule || !schedule.date) {
+    return false;
+  }
+
+  return schedule.date <= dateKey && getScheduleEndDate(schedule) >= dateKey;
+}
+
+function doesScheduleIntersectRange(schedule, startDateKey, endDateKey) {
+  if (!schedule || !schedule.date) {
+    return false;
+  }
+
+  return schedule.date <= endDateKey && getScheduleEndDate(schedule) >= startDateKey;
+}
+
+function getScheduleEndDate(schedule) {
+  if (schedule && typeof schedule.endDate === "string" && schedule.endDate >= schedule.date) {
+    return schedule.endDate;
+  }
+
+  return schedule ? schedule.date : "";
+}
+
+function hasScheduleDateRange(schedule) {
+  return Boolean(schedule && getScheduleEndDate(schedule) > schedule.date);
+}
+
+function getRecurringSchedulesForDate(dateKey) {
+  const date = parseDateTime(`${dateKey}T00:00`);
+  if (date < MIN_CALENDAR_MONTH) {
+    return [];
+  }
+
+  return getActiveRecurringRules()
+    .filter((rule) => shouldShowRecurringSchedule(rule, date, dateKey))
+    .map((rule) => {
+      let title = rule.title;
+      if (rule.baseYear && rule.titleFormat) {
+        const diff = date.getFullYear() - rule.baseYear;
+        title = rule.titleFormat.replace("%s", rule.title).replace("%d", diff);
+      }
+      return {
+        id: `${rule.id}-${dateKey}`,
+        recurringRuleId: rule.id,
+        isRecurring: true,
+        date: dateKey,
+        title: title,
+        timeLabel: rule.timeLabel || "",
+        description: rule.description || "",
+        color: rule.color || "default",
+        updatedAt: rule.updatedAt,
+        includeInUnread: Boolean(rule.includeInUnread),
+        editable: rule.editable !== false,
+      };
+    });
+}
+
+function shouldShowRecurringSchedule(rule, date, dateKey) {
+  if (!rule) {
+    return false;
+  }
+
+  if (rule.startDate && dateKey < rule.startDate) {
+    return false;
+  }
+
+  if (rule.endDate && dateKey > rule.endDate) {
+    return false;
+  }
+
+  if (rule.type === "seasonal-setsubun") {
+    return shouldShowSetsubunSchedule(date, dateKey);
+  }
+
+  if (rule.type === "yearly-interval") {
+    return shouldShowYearlyIntervalSchedule(rule, date);
+  }
+
+  if (rule.type === "annual-nth-weekday") {
+    return shouldShowAnnualNthWeekdaySchedule(rule, date);
+  }
+
+  if (rule.type === "monthly-day") {
+    return shouldShowMonthlyDaySchedule(rule, date);
+  }
+
+  return shouldShowWeeklySchedule(rule, date);
+}
+
+function shouldShowWeeklySchedule(rule, date) {
+  return typeof rule.weekday === "number" && date.getDay() === rule.weekday;
+}
+
+function shouldShowSetsubunSchedule(date, dateKey) {
+  return getSetsubunDateKey(date.getFullYear()) === dateKey;
+}
+
+function shouldShowYearlyIntervalSchedule(rule, date) {
+  if (!rule.startDate) {
+    return false;
+  }
+
+  const startDate = parseDateTime(`${rule.startDate}T00:00`);
+  const intervalYears = Number(rule.intervalYears) || 1;
+  const yearDiff = date.getFullYear() - startDate.getFullYear();
+
+  return (
+    yearDiff >= 0 &&
+    yearDiff % intervalYears === 0 &&
+    date.getMonth() === startDate.getMonth() &&
+    date.getDate() === startDate.getDate()
+  );
+}
+
+function shouldShowAnnualNthWeekdaySchedule(rule, date) {
+  if (
+    !Number.isInteger(rule.month) ||
+    !Number.isInteger(rule.weekday) ||
+    !Number.isInteger(rule.nth)
+  ) {
+    return false;
+  }
+
+  const month = date.getMonth() + 1;
+  if (month !== rule.month || date.getDay() !== rule.weekday) {
+    return false;
+  }
+
+  const weekdayOccurrence = Math.floor((date.getDate() - 1) / 7) + 1;
+  return weekdayOccurrence === rule.nth;
+}
+
+function shouldShowMonthlyDaySchedule(rule, date) {
+  return Number.isInteger(rule.day) && date.getDate() === rule.day;
+}
+
+function getSetsubunDateKey(year) {
+  if (SEASONAL_DATE_CACHE.setsubun.has(year)) {
+    return SEASONAL_DATE_CACHE.setsubun.get(year);
+  }
+
+  const risshunDate = getSeasonalBoundaryDate(year, 315, new Date(year, 1, 2), new Date(year, 1, 5));
+  const setsubunDateKey = toDateKey(addDays(risshunDate, -1));
+  SEASONAL_DATE_CACHE.setsubun.set(year, setsubunDateKey);
+  return setsubunDateKey;
+}
+
+function getSeasonalBoundaryDate(year, targetLongitude, rangeStart, rangeEnd) {
+  let low = rangeStart.getTime();
+  let high = rangeEnd.getTime();
+
+  while (high - low > 60000) {
+    const mid = Math.floor((low + high) / 2);
+    const longitude = getSolarApparentLongitude(new Date(mid));
+
+    if (longitude >= targetLongitude) {
+      high = mid;
+    } else {
+      low = mid;
+    }
+  }
+
+  return new Date(high);
+}
+
+function getSolarApparentLongitude(date) {
+  const julianDay = date.getTime() / 86400000 + 2440587.5;
+  const julianCentury = (julianDay - 2451545.0) / 36525;
+  const meanLongitude =
+    280.46646 + 36000.76983 * julianCentury + 0.0003032 * julianCentury * julianCentury;
+  const meanAnomaly =
+    357.52911 + 35999.05029 * julianCentury - 0.0001537 * julianCentury * julianCentury;
+  const equationOfCenter =
+    (1.914602 - 0.004817 * julianCentury - 0.000014 * julianCentury * julianCentury) *
+      sinDegrees(meanAnomaly) +
+    (0.019993 - 0.000101 * julianCentury) * sinDegrees(2 * meanAnomaly) +
+    0.000289 * sinDegrees(3 * meanAnomaly);
+  const trueLongitude = meanLongitude + equationOfCenter;
+  const omega = 125.04 - 1934.136 * julianCentury;
+  return normalizeDegrees(trueLongitude - 0.00569 - 0.00478 * sinDegrees(omega));
+}
+
+function sinDegrees(value) {
+  return Math.sin((value * Math.PI) / 180);
+}
+
+function normalizeDegrees(value) {
+  const normalized = value % 360;
+  return normalized < 0 ? normalized + 360 : normalized;
+}
+
+function buildCalendarCells(monthDate) {
+  const year = monthDate.getFullYear();
+  const month = monthDate.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const leading = (firstDay.getDay() + 6) % 7;
+  const totalDays = lastDay.getDate();
+  const cells = [];
+  const prevMonthLastDay = new Date(year, month, 0).getDate();
+  const todayKey = toDateKey(new Date());
+
+  for (let index = 0; index < leading; index += 1) {
+    const day = prevMonthLastDay - leading + index + 1;
+    const date = new Date(year, month - 1, day);
+    const dateKey = toDateKey(date);
+    cells.push({
+      date: dateKey,
+      dayLabel: String(day),
+      isToday: todayKey === dateKey,
+      isOutside: true,
+      isSaturday: date.getDay() === 6,
+      isSunday: date.getDay() === 0,
+      isGarbageDay: isGarbageCollectionDay(date),
+      isDisabled: date < MIN_CALENDAR_MONTH,
+      events: getSchedulesForDate(dateKey),
+    });
+  }
+
+  for (let day = 1; day <= totalDays; day += 1) {
+    const date = new Date(year, month, day);
+    const dateKey = toDateKey(date);
+
+    cells.push({
+      date: dateKey,
+      dayLabel: String(day),
+      isToday: todayKey === dateKey,
+      isOutside: false,
+      isSaturday: date.getDay() === 6,
+      isSunday: date.getDay() === 0,
+      isGarbageDay: isGarbageCollectionDay(date),
+      isDisabled: false,
+      events: getSchedulesForDate(dateKey),
+    });
+  }
+
+  let trailingDay = 1;
+  while (cells.length % 7 !== 0) {
+    const date = new Date(year, month + 1, trailingDay);
+    const dateKey = toDateKey(date);
+    cells.push({
+      date: dateKey,
+      dayLabel: String(trailingDay),
+      isToday: todayKey === dateKey,
+      isOutside: true,
+      isSaturday: date.getDay() === 6,
+      isSunday: date.getDay() === 0,
+      isGarbageDay: isGarbageCollectionDay(date),
+      isDisabled: false,
+      events: getSchedulesForDate(dateKey),
+    });
+    trailingDay += 1;
+  }
+
+  return cells;
+}
+
+function buildMonthCalendarCells(monthDate) {
+  const cells = buildCalendarCells(monthDate);
+  const dateIndex = new Map(cells.map((cell, index) => [cell.date, index]));
+  const firstVisibleDate = cells[0]?.date || "";
+  const lastVisibleDate = cells[cells.length - 1]?.date || "";
+  const consumedOccurrences = new Set();
+  const rangeEntries = [];
+  const processedRangeIds = new Set();
+
+  cells.forEach((cell) => {
+    cell.visibleEvents = [...cell.events];
+    cell.rangeSegments = [];
+    cell.rangeLaneCount = 0;
+  });
+
+  cells.forEach((cell) => {
+    cell.events.forEach((schedule) => {
+      const occurrenceId = getScheduleOccurrenceId(schedule, cell.date);
+      if (consumedOccurrences.has(occurrenceId) || !isMonthRangeDisplayCandidate(schedule)) {
+        return;
+      }
+
+      if (hasScheduleDateRange(schedule)) {
+        const rangeStart = getMaxDateKey(schedule.date, firstVisibleDate);
+        if (cell.date !== rangeStart || processedRangeIds.has(schedule.id)) {
+          return;
+        }
+
+        const rangeEnd = getMinDateKey(getScheduleEndDate(schedule), lastVisibleDate);
+        if (rangeStart === rangeEnd) {
+          return;
+        }
+
+        processedRangeIds.add(schedule.id);
+        getDateKeySequence(rangeStart, rangeEnd).forEach((dateKey) => {
+          consumedOccurrences.add(getScheduleOccurrenceId(schedule, dateKey));
+        });
+        rangeEntries.push({
+          schedule,
+          startDate: rangeStart,
+          endDate: rangeEnd,
+        });
+        return;
+      }
+
+      const signature = getMonthAutoRangeSignature(schedule);
+      if (!signature) {
+        return;
+      }
+
+      let cursorDate = cell.date;
+      let endDate = cell.date;
+      const matchedOccurrences = [occurrenceId];
+
+      while (true) {
+        const nextDate = toDateKey(addDays(parseDateTime(`${cursorDate}T00:00`), 1));
+        if (!dateIndex.has(nextDate)) {
+          break;
+        }
+
+        const nextCell = cells[dateIndex.get(nextDate)];
+        const match = nextCell.events.find((candidate) => {
+          const candidateOccurrenceId = getScheduleOccurrenceId(candidate, nextDate);
+          return (
+            !consumedOccurrences.has(candidateOccurrenceId) &&
+            !hasScheduleDateRange(candidate) &&
+            getMonthAutoRangeSignature(candidate) === signature
+          );
+        });
+
+        if (!match) {
+          break;
+        }
+
+        endDate = nextDate;
+        matchedOccurrences.push(getScheduleOccurrenceId(match, nextDate));
+        cursorDate = nextDate;
+      }
+
+      if (endDate === cell.date) {
+        return;
+      }
+
+      matchedOccurrences.forEach((matchedOccurrenceId) => {
+        consumedOccurrences.add(matchedOccurrenceId);
+      });
+      rangeEntries.push({
+        schedule,
+        startDate: cell.date,
+        endDate,
+      });
+    });
+  });
+
+  cells.forEach((cell) => {
+    cell.visibleEvents = cell.events.filter(
+      (schedule) => !consumedOccurrences.has(getScheduleOccurrenceId(schedule, cell.date))
+    );
+  });
+
+  assignMonthRangeSegments(cells, rangeEntries);
+  return cells;
+}
+
+function assignMonthRangeSegments(cells, rangeEntries) {
+  for (let rowStartIndex = 0; rowStartIndex < cells.length; rowStartIndex += 7) {
+    const rowCells = cells.slice(rowStartIndex, rowStartIndex + 7);
+    if (rowCells.length === 0) {
+      continue;
+    }
+
+    const weekStart = rowCells[0].date;
+    const weekEnd = rowCells[rowCells.length - 1].date;
+    const laneEnds = [];
+    const rowRanges = rangeEntries
+      .filter((entry) => entry.startDate <= weekEnd && entry.endDate >= weekStart)
+      .map((entry) => ({
+        ...entry,
+        segmentStart: getMaxDateKey(entry.startDate, weekStart),
+        segmentEnd: getMinDateKey(entry.endDate, weekEnd),
+      }))
+      .sort((left, right) => {
+        const leftStart = getDateDistanceInDays(weekStart, left.segmentStart);
+        const rightStart = getDateDistanceInDays(weekStart, right.segmentStart);
+        if (leftStart !== rightStart) {
+          return leftStart - rightStart;
+        }
+
+        const leftEnd = getDateDistanceInDays(weekStart, left.segmentEnd);
+        const rightEnd = getDateDistanceInDays(weekStart, right.segmentEnd);
+        if (leftEnd !== rightEnd) {
+          return rightEnd - leftEnd;
+        }
+
+        return left.schedule.title.localeCompare(right.schedule.title, "ja");
+      });
+
+    rowRanges.forEach((entry) => {
+      const startCol = getDateDistanceInDays(weekStart, entry.segmentStart);
+      const endCol = getDateDistanceInDays(weekStart, entry.segmentEnd);
+      let lane = 0;
+
+      while (laneEnds[lane] !== undefined && laneEnds[lane] >= startCol) {
+        lane += 1;
+      }
+
+      laneEnds[lane] = endCol;
+
+      for (let col = startCol; col <= endCol; col += 1) {
+        rowCells[col].rangeSegments.push({
+          lane,
+          schedule: entry.schedule,
+          isActualStart: col === startCol && entry.segmentStart === entry.startDate,
+          isActualEnd: col === endCol && entry.segmentEnd === entry.endDate,
+          showLabel: col === startCol,
+        });
+      }
+    });
+
+    const laneCount = laneEnds.length;
+    rowCells.forEach((cell) => {
+      cell.rangeLaneCount = laneCount;
+      cell.rangeSegments.sort(
+        (left, right) =>
+          left.lane - right.lane ||
+          left.schedule.title.localeCompare(right.schedule.title, "ja")
+      );
+    });
+  }
+}
+
+function isMonthRangeDisplayCandidate(schedule) {
+  return Boolean(schedule && !hasScheduleTimeRange(schedule));
+}
+
+function getMonthAutoRangeSignature(schedule) {
+  if (!isMonthRangeDisplayCandidate(schedule) || hasScheduleDateRange(schedule)) {
+    return "";
+  }
+
+  return JSON.stringify({
+    title: normalizeText(schedule.title || ""),
+    description: normalizeText(schedule.description || ""),
+    timeLabel: getScheduleTimeLabel(schedule, ""),
+    color: getScheduleColorTone(schedule),
+  });
+}
+
+function getScheduleOccurrenceId(schedule, dateKey) {
+  return `${schedule.id}@${dateKey}`;
+}
+
+function getDateKeySequence(startDateKey, endDateKey) {
+  const dates = [];
+  for (
+    let cursor = parseDateTime(`${startDateKey}T00:00`);
+    toDateKey(cursor) <= endDateKey;
+    cursor = addDays(cursor, 1)
+  ) {
+    dates.push(toDateKey(cursor));
+  }
+  return dates;
+}
+
+function getDateDistanceInDays(startDateKey, endDateKey) {
+  const startDate = parseDateTime(`${startDateKey}T00:00`);
+  const endDate = parseDateTime(`${endDateKey}T00:00`);
+  return Math.round((endDate - startDate) / 86400000);
+}
+
+function getMinDateKey(left, right) {
+  return left <= right ? left : right;
+}
+
+function getMaxDateKey(left, right) {
+  return left >= right ? left : right;
+}
+
+function createInitialOpenMonths() {
+  const openMonths = new Set();
+  const currentMonthKey = getYearMonthKey(toDateTimeKey(clampMonth(getStartOfMonth(new Date()))));
+
+  getSortedNotices().forEach((notice) => {
+    if (getYearMonthKey(notice.publishedAt) === currentMonthKey) {
+      openMonths.add(getNoticeGroupKey(notice));
+    }
+  });
+
+  return openMonths;
+}
+
+function getLastUpdatedAt() {
+  const values = [
+    ...appData.notices.map((notice) => notice.updatedAt),
+    ...getAllSchedules().map((schedule) => schedule.updatedAt),
+    ...getActiveRecurringRules().map((rule) => rule.updatedAt),
+  ];
+
+  return (
+    values.sort((left, right) => parseDateTime(right) - parseDateTime(left))[0] ||
+    toDateTimeKey(new Date())
+  );
+}
+
+function getNoticeStatusLabel(notice, isUnread) {
+  return isUnread ? "New" : "開封済み";
+}
+
+function getNoticeStatusClass(notice, isUnread) {
+  return isUnread ? "notice-card__status--unread" : "notice-card__status--read";
+}
+
+function getNoticeSource(notice) {
+  return notice.source === "company" ? "company" : "papa";
+}
+
+function getNoticeSourceMeta(sourceKey) {
+  if (sourceKey === "company") {
+    return {
+      key: "company",
+      label: "業務連絡",
+      avatar: "会",
+    };
+  }
+
+  return {
+    key: "papa",
+    label: "プライベート",
+    avatar: "パ",
+  };
+}
+
+function getNoticeCountBySource(sourceKey) {
+  return getSortedNotices().filter((notice) => getNoticeSource(notice) === sourceKey).length;
+}
+
+function getNoticeGroupKey(notice) {
+  return `${getNoticeSource(notice)}:${getYearMonthKey(notice.publishedAt)}`;
+}
+
+function loadReadNoticeIds() {
+  try {
+    const saved = window.localStorage.getItem(STORAGE_KEY_READ_NOTICES);
+    const parsed = saved ? JSON.parse(saved) : [];
+    return new Set(Array.isArray(parsed) ? parsed : []);
+  } catch (error) {
+    return new Set();
+  }
+}
+
+function loadReadScheduleIds() {
+  try {
+    const saved = window.localStorage.getItem(STORAGE_KEY_READ_SCHEDULES);
+    const parsed = saved ? JSON.parse(saved) : [];
+    return new Set(Array.isArray(parsed) ? parsed : []);
+  } catch (error) {
+    return new Set();
+  }
+}
+
+function loadPinnedNoticeIds() {
+  try {
+    const saved = window.localStorage.getItem(STORAGE_KEY_PINNED_NOTICES);
+    const parsed = saved ? JSON.parse(saved) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function loadScheduleOverrides() {
+  try {
+    const saved = window.localStorage.getItem(STORAGE_KEY_SCHEDULE_OVERRIDES);
+    const parsed = saved ? JSON.parse(saved) : {};
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function loadDeletedScheduleIds() {
+  try {
+    const saved = window.localStorage.getItem(STORAGE_KEY_DELETED_SCHEDULES);
+    const parsed = saved ? JSON.parse(saved) : [];
+    return new Set(Array.isArray(parsed) ? parsed : []);
+  } catch (error) {
+    return new Set();
+  }
+}
+
+function loadRecurringRuleOverrides() {
+  try {
+    const saved = window.localStorage.getItem(STORAGE_KEY_RECURRING_RULE_OVERRIDES);
+    const parsed = saved ? JSON.parse(saved) : {};
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function loadDeletedRecurringRuleIds() {
+  try {
+    const saved = window.localStorage.getItem(STORAGE_KEY_DELETED_RECURRING_RULES);
+    const parsed = saved ? JSON.parse(saved) : [];
+    return new Set(Array.isArray(parsed) ? parsed : []);
+  } catch (error) {
+    return new Set();
+  }
+}
+
+function hasGrantedAuth() {
+  try {
+    return window.localStorage.getItem(STORAGE_KEY_AUTH_GRANTED) === "granted";
+  } catch (error) {
+    return false;
+  }
+}
+
+function hasGrantedNoticeAuth() {
+  try {
+    return window.localStorage.getItem(STORAGE_KEY_NOTICE_AUTH_GRANTED) === "granted";
+  } catch (error) {
+    return false;
+  }
+}
+
+function saveReadNoticeIds(ids) {
+  try {
+    window.localStorage.setItem(STORAGE_KEY_READ_NOTICES, JSON.stringify([...ids]));
+  } catch (error) {
+    return;
+  }
+}
+
+function saveReadScheduleIds(ids) {
+  try {
+    window.localStorage.setItem(STORAGE_KEY_READ_SCHEDULES, JSON.stringify([...ids]));
+  } catch (error) {
+    return;
+  }
+}
+
+function savePinnedNoticeIds(ids) {
+  try {
+    window.localStorage.setItem(STORAGE_KEY_PINNED_NOTICES, JSON.stringify(ids));
+  } catch (error) {
+    return;
+  }
+}
+
+function saveScheduleOverrides(overrides) {
+  try {
+    window.localStorage.setItem(STORAGE_KEY_SCHEDULE_OVERRIDES, JSON.stringify(overrides));
+  } catch (error) {
+    return;
+  }
+}
+
+function saveDeletedScheduleIds(ids) {
+  try {
+    window.localStorage.setItem(
+      STORAGE_KEY_DELETED_SCHEDULES,
+      JSON.stringify([...ids])
+    );
+  } catch (error) {
+    return;
+  }
+}
+
+function saveRecurringRuleOverrides(overrides) {
+  try {
+    window.localStorage.setItem(
+      STORAGE_KEY_RECURRING_RULE_OVERRIDES,
+      JSON.stringify(overrides)
+    );
+  } catch (error) {
+    return;
+  }
+}
+
+function saveDeletedRecurringRuleIds(ids) {
+  try {
+    window.localStorage.setItem(
+      STORAGE_KEY_DELETED_RECURRING_RULES,
+      JSON.stringify([...ids])
+    );
+  } catch (error) {
+    return;
+  }
+}
+
+function saveGrantedAuth() {
+  try {
+    window.localStorage.setItem(STORAGE_KEY_AUTH_GRANTED, "granted");
+  } catch (error) {
+    return;
+  }
+}
+
+function saveGrantedNoticeAuth() {
+  try {
+    window.localStorage.setItem(STORAGE_KEY_NOTICE_AUTH_GRANTED, "granted");
+  } catch (error) {
+    return;
+  }
+}
+
+function createEmptyCard(title, text) {
+  const card = document.createElement("article");
+  card.className = "empty-card";
+
+  const descriptionMarkup = text
+    ? `<p class="empty-text">${escapeHtml(text)}</p>`
+    : "";
+
+  card.innerHTML = `
+    <h3 class="section-title">${escapeHtml(title)}</h3>
+    ${descriptionMarkup}
+  `;
+  return card;
+}
+
+function getSnippet(text, maxLength) {
+  const normalized = text.replace(/\s+/g, " ").trim();
+  if (normalized.length <= maxLength) {
+    return normalized;
+  }
+
+  return `${normalized.slice(0, maxLength).trim()}…`;
+}
+
+function getNoticePreviewText(text, query, maxLength) {
+  const normalized = text.replace(/\s+/g, " ").trim();
+  if (!query) {
+    return getSnippet(normalized, maxLength);
+  }
+
+  const keyword = query.trim().toLowerCase();
+  const index = normalized.toLowerCase().indexOf(keyword);
+
+  if (index < 0 || normalized.length <= maxLength) {
+    return getSnippet(normalized, maxLength);
+  }
+
+  const start = Math.max(0, index - 18);
+  const end = Math.min(normalized.length, start + maxLength);
+  const prefix = start > 0 ? "…" : "";
+  const suffix = end < normalized.length ? "…" : "";
+  return `${prefix}${normalized.slice(start, end).trim()}${suffix}`;
+}
+
+function createSourceBadgeMarkup(sourceMeta) {
+  return `<span class="notice-source-chip notice-source-chip--${sourceMeta.key}">${sourceMeta.label}</span>`;
+}
+
+function createUnreadSection(title, items, onOpen, mapItem, onMarkAllRead) {
+  const section = document.createElement("section");
+  section.className = "unread-section";
+
+  const header = document.createElement("div");
+  header.className = "unread-section__header";
+  header.innerHTML = `
+    <h4 class="unread-section__title">${escapeHtml(title)}</h4>
+    <div class="unread-section__controls">
+      <button
+        type="button"
+        class="unread-bulk-read pressable"
+        ${items.length === 0 ? "disabled" : ""}
+      >
+        一括既読
+      </button>
+      <span class="unread-count ${items.length > 0 ? "unread-count--active" : "unread-count--zero"}">
+        ${items.length}件
+      </span>
+    </div>
+  `;
+  section.appendChild(header);
+
+  const bulkReadButton = header.querySelector(".unread-bulk-read");
+  if (bulkReadButton && onMarkAllRead && items.length > 0) {
+    bulkReadButton.addEventListener("click", onMarkAllRead);
+  }
+
+  if (items.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "empty-text";
+    empty.textContent = "現在はありません。";
+    section.appendChild(empty);
+    return section;
+  }
+
+  const list = document.createElement("div");
+  list.className = "unread-list";
+
+  items.forEach((item) => {
+    const detail = mapItem(item);
+    const button = document.createElement("button");
+    button.type = "button";
+    const summaryMarkup = detail.summary
+      ? `<span class="unread-item__summary">${escapeHtml(detail.summary)}</span>`
+      : "";
+    button.className = "unread-item pressable";
+    button.innerHTML = `
+      <span class="unread-item__meta">${escapeHtml(detail.meta)}</span>
+      <strong class="unread-item__title">${escapeHtml(detail.title)}</strong>
+      ${summaryMarkup}
+    `;
+    button.addEventListener("click", () => onOpen(item));
+    list.appendChild(button);
+  });
+
+  section.appendChild(list);
+  return section;
+}
+
+function escapeHtml(value) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function highlightText(text, query) {
+  if (!query) {
+    return escapeHtml(text);
+  }
+
+  const escaped = escapeHtml(text);
+  const safeQuery = escapeRegExp(query.trim());
+  if (!safeQuery) {
+    return escaped;
+  }
+
+  const matcher = new RegExp(`(${safeQuery})`, "gi");
+  return escaped.replace(matcher, '<mark class="mark-text">$1</mark>');
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function normalizeText(value) {
+  return value.toLowerCase().normalize("NFKC");
+}
+
+function parseDateTime(value) {
+  const [datePart, timePart = "00:00"] = value.split("T");
+  const [year, month, day] = datePart.split("-").map(Number);
+  const [hour, minute] = timePart.split(":").map(Number);
+  return new Date(year, month - 1, day, hour, minute);
+}
+
+function formatDateTime(value) {
+  const date = parseDateTime(value);
+  return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 ${String(
+    date.getHours()
+  ).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+}
+
+function formatDateHeadline(dateKey) {
+  const date = parseDateTime(`${dateKey}T00:00`);
+  const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+  return `${date.getMonth() + 1}月${date.getDate()}日（${weekdays[date.getDay()]}）`;
+}
+
+function formatMonthHeadline(date) {
+  return `${date.getFullYear()}年${date.getMonth() + 1}月`;
+}
+
+function formatWeekHeadline(dateKey) {
+  const selectedDate = parseDateTime(`${dateKey}T00:00`);
+  const weekStart = getStartOfWeek(selectedDate);
+  const weekEnd = addDays(weekStart, 6);
+  return `${weekStart.getMonth() + 1}月${weekStart.getDate()}日 - ${weekEnd.getMonth() + 1}月${weekEnd.getDate()}日`;
+}
+
+function formatMonthFromKey(monthKey) {
+  const [year, month] = monthKey.split("-").map(Number);
+  return `${year}年${month}月`;
+}
+
+function formatWeekdayShort(date) {
+  return ["月", "火", "水", "木", "金", "土", "日"][(date.getDay() + 6) % 7];
+}
+
+function getYearMonthKey(value) {
+  const date = parseDateTime(value);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function getStartOfMonth(date) {
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+function getStartOfWeek(date) {
+  const start = new Date(date);
+  const diff = (date.getDay() + 6) % 7;
+  start.setDate(date.getDate() - diff);
+  start.setHours(0, 0, 0, 0);
+  return start;
+}
+
+function buildWeekDates(dateKey) {
+  const start = getStartOfWeek(parseDateTime(`${dateKey}T00:00`));
+  return Array.from({ length: 7 }, (_, index) => addDays(start, index));
+}
+
+function clampMonth(date) {
+  const monthDate = getStartOfMonth(date);
+  if (monthDate < MIN_CALENDAR_MONTH) {
+    return new Date(MIN_CALENDAR_MONTH);
+  }
+
+  return monthDate;
+}
+
+function isMinCalendarMonth(date) {
+  return getStartOfMonth(date).getTime() === MIN_CALENDAR_MONTH.getTime();
+}
+
+function isMinCalendarWeek(dateKey) {
+  const weekStart = getStartOfWeek(parseDateTime(`${dateKey}T00:00`));
+  return weekStart.getTime() <= getStartOfWeek(MIN_CALENDAR_MONTH).getTime();
+}
+
+function ensureSelectedDate() {
+  if (!state.selectedDate) {
+    state.selectedDate = toDateKey(getInitialCalendarDate());
+  }
+
+  const selectedDate = parseDateTime(`${state.selectedDate}T00:00`);
+  if (selectedDate < MIN_CALENDAR_MONTH) {
+    state.selectedDate = toDateKey(MIN_CALENDAR_MONTH);
+  }
+
+  return state.selectedDate;
+}
+
+function getInitialCalendarDate() {
+  const today = new Date();
+  return today < MIN_CALENDAR_MONTH ? new Date(MIN_CALENDAR_MONTH) : today;
+}
+
+function toDateKey(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
+    date.getDate()
+  ).padStart(2, "0")}`;
+}
+
+function addDays(date, amount) {
+  const next = new Date(date);
+  next.setDate(next.getDate() + amount);
+  return next;
+}
+
+function isGarbageCollectionDay(date) {
+  const weekday = date.getDay();
+  return weekday === 1 || weekday === 4;
+}
+
+function hasScheduleTimeRange(schedule) {
+  return isValidTime(schedule.start) && isValidTime(schedule.end);
+}
+
+function isValidTime(value) {
+  return typeof value === "string" && /^\d{2}:\d{2}$/.test(value);
+}
+
+function getScheduleTimeLabel(schedule, fallback = "") {
+  if (hasScheduleTimeRange(schedule)) {
+    return `${schedule.start}〜${schedule.end}`;
+  }
+
+  const timeLabel = typeof schedule.timeLabel === "string" ? schedule.timeLabel.trim() : "";
+  if (timeLabel && !isUnknownTimeLabel(timeLabel)) {
+    return timeLabel;
+  }
+
+  return fallback;
+}
+
+function isUnknownTimeLabel(value) {
+  const normalized = normalizeText(value).replace(/\s+/g, "");
+  return normalized === "時間未定" || normalized === "未定";
+}
+
+function formatScheduleSummaryLine(schedule) {
+  const timeLabel = getScheduleTimeLabel(schedule, "");
+  return timeLabel ? `${timeLabel} ${schedule.title}` : schedule.title;
+}
+
+function formatUnreadScheduleMeta(schedule) {
+  const timeLabel = getScheduleTimeLabel(schedule, "");
+  return timeLabel
+    ? `${formatDateHeadline(schedule.date)} / ${timeLabel}`
+    : formatDateHeadline(schedule.date);
+}
+
+function getScheduleDescription(schedule) {
+  const description =
+    typeof schedule.description === "string" ? schedule.description.trim() : "";
+  const title = typeof schedule.title === "string" ? schedule.title.trim() : "";
+
+  if (!description) {
+    return "";
+  }
+
+  if (!title) {
+    return description;
+  }
+
+  const normalizedTitle = normalizeComparableText(title);
+  const normalizedDescription = normalizeComparableText(description);
+
+  if (!normalizedDescription || normalizedDescription === normalizedTitle) {
+    return "";
+  }
+
+  const titlePattern = escapeRegExp(title);
+  const cleaned = description
+    .replace(new RegExp(`^${titlePattern}(?:の予定)?[。．、,：:・\\s]*`, "u"), "")
+    .trim();
+
+  if (!cleaned) {
+    return "";
+  }
+
+  return normalizeComparableText(cleaned) === normalizedTitle ? "" : cleaned;
+}
+
+function isRecurringSchedule(schedule) {
+  return Boolean(schedule && schedule.isRecurring);
+}
+
+function createScheduleDescriptionContent(description) {
+  if (!description) {
+    return null;
+  }
+
+  const lines = description
+    .split(/\n+/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  if (lines.length <= 1) {
+    const paragraph = document.createElement("p");
+    paragraph.className = "calendar-event__description";
+    paragraph.textContent = description;
+    return paragraph;
+  }
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "calendar-event__description-block";
+  let currentList = null;
+
+  lines.forEach((line) => {
+    const bullet = line.match(/^[・●\-]\s*(.+)$/u);
+    if (bullet) {
+      if (!currentList) {
+        currentList = document.createElement("ul");
+        currentList.className = "calendar-event__description-list";
+        wrapper.appendChild(currentList);
+      }
+
+      const item = document.createElement("li");
+      item.className = "calendar-event__description-item";
+      item.textContent = bullet[1].trim();
+      currentList.appendChild(item);
+      return;
+    }
+
+    currentList = null;
+    const paragraph = document.createElement("p");
+    paragraph.className = /^(出演グループ|出演者|グループ一覧)$/u.test(line)
+      ? "calendar-event__description calendar-event__description--heading"
+      : "calendar-event__description";
+    paragraph.textContent = line;
+    wrapper.appendChild(paragraph);
+  });
+
+  return wrapper;
+}
+
+function isValidScheduleColor(value) {
+  return SCHEDULE_COLOR_ORDER.includes(value);
+}
+
+function getScheduleColorTone(schedule) {
+  if (schedule && isValidScheduleColor(schedule.color)) {
+    return schedule.color;
+  }
+
+  return "default";
+}
+
+function getScheduleColorLabel(schedule) {
+  return SCHEDULE_COLOR_LABELS[getScheduleColorTone(schedule)] || SCHEDULE_COLOR_LABELS.default;
+}
+
+function getNextScheduleColor(currentColor) {
+  const index = SCHEDULE_COLOR_ORDER.indexOf(currentColor);
+  if (index < 0) {
+    return SCHEDULE_COLOR_ORDER[0];
+  }
+
+  return SCHEDULE_COLOR_ORDER[(index + 1) % SCHEDULE_COLOR_ORDER.length];
+}
+
+function saveSchedulePatch(scheduleId, patch, dateKey = null) {
+  const currentSchedule = getScheduleById(scheduleId, dateKey);
+  if (isRecurringSchedule(currentSchedule)) {
+    saveRecurringRulePatch(currentSchedule.recurringRuleId, patch);
+    return;
+  }
+
+  const baseSchedule = getBaseScheduleById(scheduleId);
+
+  if (!baseSchedule || !currentSchedule) {
+    return;
+  }
+
+  const nextTitle =
+    patch.title !== undefined ? patch.title.trim() : currentSchedule.title;
+  const nextDescription =
+    patch.description !== undefined
+      ? patch.description.trim()
+      : currentSchedule.description || "";
+  const nextColorRaw =
+    patch.color !== undefined ? patch.color : getScheduleColorTone(currentSchedule);
+  const nextColor = isValidScheduleColor(nextColorRaw) ? nextColorRaw : "default";
+
+  const override = {};
+  if (nextTitle !== baseSchedule.title) {
+    override.title = nextTitle;
+  }
+
+  if (nextDescription !== (baseSchedule.description || "")) {
+    override.description = nextDescription;
+  }
+
+  if (getScheduleColorTone(baseSchedule) !== nextColor) {
+    override.color = nextColor;
+  }
+
+  if (Object.keys(override).length > 0) {
+    override.updatedAt = toDateTimeKey(new Date());
+    state.scheduleOverrides[scheduleId] = override;
+  } else {
+    delete state.scheduleOverrides[scheduleId];
+  }
+
+  saveScheduleOverrides(state.scheduleOverrides);
+  render();
+}
+
+function cycleScheduleColor(scheduleId, dateKey, options = {}) {
+  const schedule = getScheduleById(scheduleId, dateKey);
+  if (!schedule) {
+    return;
+  }
+
+  saveSchedulePatch(
+    scheduleId,
+    {
+      color: getNextScheduleColor(getScheduleColorTone(schedule)),
+    },
+    dateKey
+  );
+  openScheduleDetail(dateKey, options);
+}
+
+function saveRecurringRulePatch(ruleId, patch) {
+  const baseRule = getBaseRecurringRuleById(ruleId);
+  const currentRule = getRecurringRuleById(ruleId);
+
+  if (!baseRule || !currentRule) {
+    return;
+  }
+
+  const nextTitle =
+    patch.title !== undefined ? patch.title.trim() : currentRule.title;
+  const nextDescription =
+    patch.description !== undefined
+      ? patch.description.trim()
+      : currentRule.description || "";
+  const nextColorRaw =
+    patch.color !== undefined ? patch.color : getScheduleColorTone(currentRule);
+  const nextColor = isValidScheduleColor(nextColorRaw) ? nextColorRaw : "default";
+
+  const override = {};
+  if (nextTitle !== baseRule.title) {
+    override.title = nextTitle;
+  }
+
+  if (nextDescription !== (baseRule.description || "")) {
+    override.description = nextDescription;
+  }
+
+  if (getScheduleColorTone(baseRule) !== nextColor) {
+    override.color = nextColor;
+  }
+
+  if (Object.keys(override).length > 0) {
+    override.updatedAt = toDateTimeKey(new Date());
+    state.recurringRuleOverrides[ruleId] = override;
+  } else {
+    delete state.recurringRuleOverrides[ruleId];
+  }
+
+  saveRecurringRuleOverrides(state.recurringRuleOverrides);
+  render();
+}
+
+function deleteSchedule(scheduleId, dateKey = null) {
+  const schedule = getScheduleById(scheduleId, dateKey);
+  if (isRecurringSchedule(schedule)) {
+    deleteRecurringRule(schedule.recurringRuleId, dateKey);
+    return;
+  }
+
+  if (!getBaseScheduleById(scheduleId)) {
+    return;
+  }
+
+  state.deletedScheduleIds.add(scheduleId);
+  delete state.scheduleOverrides[scheduleId];
+  state.readScheduleIds.delete(scheduleId);
+  saveDeletedScheduleIds(state.deletedScheduleIds);
+  saveScheduleOverrides(state.scheduleOverrides);
+  saveReadScheduleIds(state.readScheduleIds);
+  render();
+}
+
+function deleteRecurringRule(ruleId, dateKey) {
+  if (!getBaseRecurringRuleById(ruleId)) {
+    return;
+  }
+
+  // 繰り返し予定を一掃するのではなく、削除操作を行った日（dateKey）を終了日として保存します。
+  // これにより、削除した日までの過去分は残り、翌日以降の分だけが非表示になります。
+  const override = state.recurringRuleOverrides[ruleId] || {};
+  override.endDate = dateKey;
+  override.updatedAt = toDateTimeKey(new Date());
+  state.recurringRuleOverrides[ruleId] = override;
+
+  saveRecurringRuleOverrides(state.recurringRuleOverrides);
+  render();
+}
+
+function normalizeComparableText(value) {
+  return normalizeText(value)
+    .replace(/[。．、,：:・「」『』（）()!?！？\s]/g, "")
+    .replace(/の予定$/u, "");
+}
+
+function compareSchedules(left, right) {
+  const dateCompare = left.date.localeCompare(right.date);
+  if (dateCompare !== 0) {
+    return dateCompare;
+  }
+
+  const leftTimed = hasScheduleTimeRange(left);
+  const rightTimed = hasScheduleTimeRange(right);
+
+  if (leftTimed && rightTimed) {
+    return parseTimeToMinutes(left.start) - parseTimeToMinutes(right.start);
+  }
+
+  if (leftTimed) {
+    return -1;
+  }
+
+  if (rightTimed) {
+    return 1;
+  }
+
+  const leftLabel = getScheduleTimeLabel(left, "");
+  const rightLabel = getScheduleTimeLabel(right, "");
+  if (leftLabel !== rightLabel) {
+    return leftLabel.localeCompare(rightLabel, "ja");
+  }
+
+  return left.title.localeCompare(right.title, "ja");
+}
+
+function toDateTimeKey(date) {
+  return `${toDateKey(date)}T${String(date.getHours()).padStart(2, "0")}:${String(
+    date.getMinutes()
+  ).padStart(2, "0")}`;
+}
+
+function parseTimeToMinutes(value) {
+  const [hour, minute] = value.split(":").map(Number);
+  return hour * 60 + minute;
+}
+    </script>
+  </body>
+</html>
